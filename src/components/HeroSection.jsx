@@ -57,7 +57,7 @@ export default function HeroSection() {
             amount: AMOUNT,
             currency: 'INR',
             name: 'Rain Clouds',
-            description: 'Rain Clouds Ebook — A Collection of Emotions',
+            description: 'മഴമേഘങ്ങളെ പ്രണയിച്ചവൾ — A Collection of Emotions',
             order_id: orderId,
             prefill: {
                 email: user?.email || '',
@@ -98,25 +98,17 @@ export default function HeroSection() {
             <div className="hero__inner container">
                 {/* Left: Content */}
                 <div className="hero__content animate-fade-up">
-                    <div className="hero__badge animate-fade delay-1">
-                        ✨ Now Available
-                    </div>
                     <h1 className="hero__title animate-fade-up delay-2">
-                        Rain Clouds
+                        മഴമേഘങ്ങളെ പ്രണയിച്ചവൾ
                     </h1>
                     <p className="hero__subtitle animate-fade-up delay-2">
                         A Collection of Emotions
                     </p>
                     <p className="hero__desc animate-fade-up delay-3">
-                        Drift through pages soaked in feeling. <em>Rain Clouds</em> is a poetic ebook
+                        Drift through pages soaked in feeling. <em>മഴമേഘങ്ങളെ പ്രണയിച്ചവൾ</em> is a poetic ebook
                         that captures the quiet storms within — love, loss, longing, and the gentle
                         peace that follows every rain.
                     </p>
-
-                    <div className="hero__price-row animate-fade-up delay-3">
-                        <span className="hero__price">₹149</span>
-                        <span className="hero__price-note">One-time purchase • Instant download</span>
-                    </div>
 
                     <div className="hero__actions animate-fade-up delay-4">
                         <button className="btn-primary" onClick={handleBuyNow}>
@@ -142,10 +134,6 @@ export default function HeroSection() {
                 </div>
             </div>
 
-            {/* Scroll indicator */}
-            <div className="hero__scroll">
-                <span />
-            </div>
         </section>
     );
 }

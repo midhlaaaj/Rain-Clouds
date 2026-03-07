@@ -35,7 +35,7 @@ export default function CTASection() {
             amount: AMOUNT,
             currency: 'INR',
             name: 'Rain Clouds',
-            description: 'Rain Clouds Ebook — A Collection of Emotions',
+            description: 'മഴമേഘങ്ങളെ പ്രണയിച്ചവൾ — A Collection of Emotions',
             order_id: orderId,
             prefill: { email: user?.email || '' },
             theme: { color: '#4a90d9' },
@@ -62,7 +62,7 @@ export default function CTASection() {
                     <p className="cta__eyebrow">Ready to Read?</p>
                     <h2 className="cta__title">Your next favorite book<br />is one click away.</h2>
                     <p className="cta__desc">
-                        Download <em>Rain Clouds</em> instantly and carry it with you everywhere.
+                        Download <em>മഴമേഘങ്ങളെ പ്രണയിച്ചവൾ</em> instantly and carry it with you everywhere.
                         A small price for a book that stays with you.
                     </p>
 

@@ -16,6 +16,32 @@
     box-shadow: var(--shadow-sm);
 }
 
+/* When header has white bg, switch elements to deep blue */
+.header--scrolled .header__hamburger span {
+    background: var(--deep-blue);
+}
+
+.header--scrolled .header__hamburger:hover {
+    background: rgba(74, 144, 217, 0.1);
+}
+
+.header--scrolled .header__brand {
+    color: var(--deep-blue);
+}
+
+.header--scrolled .header__brand:hover {
+    color: var(--sky-blue);
+}
+
+.header--scrolled .header__profile {
+    color: var(--deep-blue);
+}
+
+.header--scrolled .header__profile:hover {
+    background: rgba(74, 144, 217, 0.1);
+}
+
+
 .header__inner {
     display: grid;
     grid-template-columns: 1fr auto 1fr;
@@ -39,14 +65,14 @@
 }
 
 .header__hamburger:hover {
-    background: rgba(74, 144, 217, 0.1);
+    background: rgba(255, 255, 255, 0.15);
 }
 
 .header__hamburger span {
     display: block;
     width: 22px;
     height: 2px;
-    background: var(--deep-blue);
+    background: var(--white);
     border-radius: 2px;
     transition: transform 0.3s, width 0.3s;
 }
@@ -61,7 +87,7 @@
     font-family: var(--font-heading);
     font-size: 1.35rem;
     font-weight: 700;
-    color: var(--deep-blue);
+    color: var(--white);
     letter-spacing: 0.01em;
     display: flex;
     align-items: center;
@@ -70,7 +96,7 @@
 }
 
 .header__brand:hover {
-    color: var(--sky-blue);
+    color: rgba(255, 255, 255, 0.75);
 }
 
 .header__brand-icon {
@@ -86,7 +112,7 @@
     padding: 8px;
     border-radius: 50%;
     transition: background 0.2s, transform 0.2s;
-    color: var(--deep-blue);
+    color: var(--white);
 }
 
 .header__profile svg {
@@ -95,7 +121,7 @@
 }
 
 .header__profile:hover {
-    background: rgba(74, 144, 217, 0.1);
+    background: rgba(255, 255, 255, 0.15);
     transform: scale(1.05);
 }
 

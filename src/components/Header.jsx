@@ -4,17 +4,18 @@ import { useAuth } from '../context/AuthContext';
 import Sidebar from './Sidebar';
 import './Header.css';
 
-export default function Header() {
-    const [scrolled, setScrolled] = useState(false);
+export default function Header({ solid = false }) {
+    const [scrolled, setScrolled] = useState(solid);
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const { user } = useAuth();
     const navigate = useNavigate();
 
     useEffect(() => {
+        if (solid) return; // If solid is forced, don't change on scroll
         const onScroll = () => setScrolled(window.scrollY > 30);
         window.addEventListener('scroll', onScroll, { passive: true });
         return () => window.removeEventListener('scroll', onScroll);
-    }, []);
+    }, [solid]);
 
     return (
         <>
@@ -33,7 +34,6 @@ export default function Header() {
 
                     {/* Center: Brand */}
                     <Link to="/" className="header__brand">
-                        <span className="header__brand-icon">☁</span>
                         Rain Clouds
                     </Link>
 

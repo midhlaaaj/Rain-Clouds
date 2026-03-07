@@ -4,9 +4,38 @@ import { useAuth } from '../context/AuthContext';
 import './Sidebar.css';
 
 const NAV_LINKS = [
-    { to: '/', label: 'Home', icon: '🏠' },
-    { to: '/dashboard', label: 'Dashboard', icon: '📚' },
-    { to: '/signin', label: 'Sign In', icon: '🔐' },
+    {
+        to: '/',
+        label: 'Home',
+        icon: (
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M9 22V12h6v10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+        )
+    },
+    {
+        to: '/dashboard',
+        label: 'Dashboard',
+        icon: (
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <rect x="3" y="3" width="7" height="7" stroke="currentColor" strokeWidth="2" rx="1" />
+                <rect x="14" y="3" width="7" height="7" stroke="currentColor" strokeWidth="2" rx="1" />
+                <rect x="14" y="14" width="7" height="7" stroke="currentColor" strokeWidth="2" rx="1" />
+                <rect x="3" y="14" width="7" height="7" stroke="currentColor" strokeWidth="2" rx="1" />
+            </svg>
+        )
+    },
+    {
+        to: '/signin',
+        label: 'Sign In',
+        icon: (
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <rect x="3" y="11" width="18" height="11" rx="2" stroke="currentColor" strokeWidth="2" />
+                <path d="M7 11V7a5 5 0 0110 0v4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+            </svg>
+        )
+    },
 ];
 
 export default function Sidebar({ isOpen, onClose }) {
@@ -38,7 +67,7 @@ export default function Sidebar({ isOpen, onClose }) {
             <aside className={`sidebar ${isOpen ? 'sidebar--open' : ''}`}>
                 {/* Header */}
                 <div className="sidebar__header">
-                    <span className="sidebar__brand">☁ Rain Clouds</span>
+                    <span className="sidebar__brand">Rain Clouds</span>
                     <button className="sidebar__close" onClick={onClose} aria-label="Close menu">
                         <svg viewBox="0 0 24 24" fill="none">
                             <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
@@ -46,18 +75,6 @@ export default function Sidebar({ isOpen, onClose }) {
                     </button>
                 </div>
 
-                {/* User greeting */}
-                {user && (
-                    <div className="sidebar__user">
-                        <div className="sidebar__avatar">
-                            {user.email?.charAt(0).toUpperCase()}
-                        </div>
-                        <div>
-                            <p className="sidebar__user-email">{user.email}</p>
-                            <p className="sidebar__user-label">Signed in</p>
-                        </div>
-                    </div>
-                )}
 
                 {/* Nav links */}
                 <nav className="sidebar__nav">
@@ -78,7 +95,11 @@ export default function Sidebar({ isOpen, onClose }) {
 
                     {user && (
                         <button className="sidebar__link sidebar__link--signout" onClick={handleSignOut}>
-                            <span className="sidebar__link-icon">🚪</span>
+                            <span className="sidebar__link-icon">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                    <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                </svg>
+                            </span>
                             Sign Out
                         </button>
                     )}

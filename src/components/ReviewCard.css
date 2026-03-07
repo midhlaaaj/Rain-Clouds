@@ -18,26 +18,29 @@
 
 /* Quotes */
 .review-card__quote {
-    font-family: 'Georgia', serif;
-    font-size: 5.5rem;
-    line-height: 1;
     color: var(--sky-blue);
-    opacity: 0.35;
-    font-weight: 900;
-    letter-spacing: -0.02em;
+    opacity: 0.25;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     user-select: none;
+}
+
+.review-card__quote svg {
+    width: 32px;
+    height: 32px;
 }
 
 .review-card__quote--open {
     align-self: flex-start;
-    margin-bottom: -16px;
-    margin-top: -8px;
+    margin-bottom: 8px;
+    margin-left: -4px;
 }
 
 .review-card__quote--close {
     align-self: flex-end;
-    margin-top: -20px;
-    transform: scaleY(-1) rotate(180deg);
+    margin-top: 8px;
+    margin-right: -4px;
 }
 
 /* Text */
@@ -85,7 +88,8 @@
         padding: 28px 22px 22px;
     }
 
-    .review-card__quote {
-        font-size: 4.5rem;
+    .review-card__quote svg {
+        width: 26px;
+        height: 26px;
     }
 }

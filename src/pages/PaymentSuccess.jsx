@@ -15,7 +15,7 @@ export default function PaymentSuccess() {
                 <div className="success-card__cloud">☁</div>
 
                 <h1 className="success-card__title">Payment Successful!</h1>
-                <p className="success-card__subtitle">Thank you for purchasing Rain Clouds</p>
+                <p className="success-card__subtitle">Thank you for purchasing മഴമേഘങ്ങളെ പ്രണയിച്ചവൾ</p>
                 <p className="success-card__desc">
                     Your ebook purchase has been confirmed. You can access your purchase
                     history from your dashboard. Happy reading! 🌧
@@ -24,7 +24,7 @@ export default function PaymentSuccess() {
                 <div className="success-card__detail">
                     <span>📘</span>
                     <div>
-                        <p className="success-card__detail-book">Rain Clouds — A Collection of Emotions</p>
+                        <p className="success-card__detail-book">മഴമേഘങ്ങളെ പ്രണയിച്ചവൾ — A Collection of Emotions</p>
                         <p className="success-card__detail-amount">₹149 · One-time purchase</p>
                     </div>
                 </div>

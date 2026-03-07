@@ -1,6 +1,6 @@
 .hero {
     min-height: 100vh;
-    background: linear-gradient(160deg, var(--deep-blue) 0%, #213660 40%, #2d4a7a 70%, var(--mid-blue) 100%);
+    background: var(--deep-blue);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -61,7 +61,7 @@
     font-weight: 800;
     color: var(--white);
     letter-spacing: -0.02em;
-    line-height: 1.1;
+    line-height: 1.35;
 }
 
 .hero__subtitle {
@@ -141,7 +141,6 @@
     max-width: 340px;
     border-radius: 12px;
     box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.08);
-    animation: float 5s ease-in-out infinite;
     position: relative;
     z-index: 1;
 }
@@ -227,10 +226,10 @@
 
 @media (max-width: 480px) {
     .hero {
-        padding: 90px 0 72px;
+        padding: 120px 0 72px;
     }
 
     .hero__title {
-        font-size: 2.4rem;
+        font-size: 2.2rem;
     }
 }

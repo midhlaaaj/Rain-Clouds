@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import { useAuth } from './context/AuthContext';
 import Header from './components/Header';
 import Footer from './components/Footer';
@@ -11,6 +11,8 @@ import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
   const { loading } = useAuth();
+  const location = useLocation();
+  const isHome = location.pathname === '/';
 
   if (loading) {
     return (
@@ -22,7 +24,7 @@ function App() {
 
   return (
     <>
-      <Header />
+      <Header solid={!isHome} />
       <main>
         <Routes>
           <Route path="/" element={<Home />} />

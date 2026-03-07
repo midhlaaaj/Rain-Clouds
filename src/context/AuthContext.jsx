@@ -9,33 +9,53 @@ export function AuthProvider({ children }) {
     const [isAdmin, setIsAdmin] = useState(false);
 
     useEffect(() => {
-        // Get current session
-        supabase.auth.getSession().then(({ data: { session } }) => {
-            setUser(session?.user ?? null);
-            if (session?.user) checkAdmin(session.user.id);
-            setLoading(false);
+        supabase.auth.getSession().then(async ({ data: { session } }) => {
+            try {
+                setUser(session?.user ?? null);
+                if (session?.user) {
+                    await checkAdmin(session.user.id);
+                }
+            } catch (e) {
+                console.warn('Auth init error:', e);
+            } finally {
+                setLoading(false); // always unblock the app
+            }
         });
 
-        // Listen for auth changes
-        const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-            setUser(session?.user ?? null);
-            if (session?.user) {
-                checkAdmin(session.user.id);
-            } else {
-                setIsAdmin(false);
+        const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
+            try {
+                setUser(session?.user ?? null);
+                if (session?.user) {
+                    await checkAdmin(session.user.id);
+                } else {
+                    setIsAdmin(false);
+                }
+            } catch (e) {
+                console.warn('Auth change error:', e);
             }
         });
 
         return () => subscription.unsubscribe();
     }, []);
 
+    // Checks admin role with a 5-second timeout so it never hangs the app
     async function checkAdmin(userId) {
-        const { data } = await supabase
+        const timeout = new Promise((_, reject) =>
+            setTimeout(() => reject(new Error('checkAdmin timeout')), 5000)
+        );
+        const query = supabase
             .from('user_roles')
             .select('role')
             .eq('user_id', userId)
-            .single();
-        setIsAdmin(data?.role === 'admin');
+            .maybeSingle();
+
+        try {
+            const { data } = await Promise.race([query, timeout]);
+            setIsAdmin(data?.role === 'admin');
+        } catch (e) {
+            console.warn('checkAdmin failed:', e.message);
+            setIsAdmin(false);
+        }
     }
 
     async function signOut() {
@@ -54,3 +74,4 @@ export function useAuth() {
     if (!ctx) throw new Error('useAuth must be used within AuthProvider');
     return ctx;
 }
+
