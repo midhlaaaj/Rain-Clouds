@@ -1,0 +1,241 @@
+.admin {
+    min-height: 100vh;
+    background: var(--soft-gray);
+    padding: 100px 0 80px;
+}
+
+.admin__inner {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+}
+
+.admin__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.admin__eyebrow {
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--sky-blue);
+    margin-bottom: 4px;
+}
+
+.admin__title {
+    font-family: var(--font-heading);
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--deep-blue);
+}
+
+.admin__user {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+/* Toast */
+.admin__toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: var(--deep-blue);
+    color: var(--white);
+    padding: 12px 24px;
+    border-radius: 50px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    box-shadow: var(--shadow-md);
+    animation: fadeInUp 0.3s var(--transition);
+    z-index: 999;
+}
+
+/* Card */
+.admin__card {
+    background: var(--white);
+    border-radius: var(--radius-md);
+    padding: 32px;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border);
+}
+
+.admin__card-title {
+    font-family: var(--font-heading);
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--deep-blue);
+    margin-bottom: 24px;
+}
+
+/* Form */
+.admin__form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.admin__form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.admin__form-group label {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    letter-spacing: 0.03em;
+}
+
+.admin__form-group input,
+.admin__form-group textarea {
+    padding: 12px 16px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    color: var(--text-dark);
+    background: var(--white);
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    resize: vertical;
+}
+
+.admin__form-group input:focus,
+.admin__form-group textarea:focus {
+    border-color: var(--sky-blue);
+    box-shadow: 0 0 0 3px rgba(74, 144, 217, 0.12);
+}
+
+.admin__form-actions {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.admin__cancel-btn {
+    padding: 12px 24px;
+    border-radius: 50px;
+    border: 1.5px solid var(--border);
+    background: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    font-family: var(--font-body);
+    transition: background 0.2s, color 0.2s;
+}
+
+.admin__cancel-btn:hover {
+    background: var(--soft-gray);
+    color: var(--text-dark);
+}
+
+/* Reviews list */
+.admin__loading,
+.admin__empty {
+    padding: 32px 0;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    display: flex;
+    justify-content: center;
+}
+
+.admin__reviews-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.admin__review-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 18px 20px;
+    background: var(--soft-gray);
+    border-radius: var(--radius-sm);
+    transition: background 0.2s;
+}
+
+.admin__review-item:hover {
+    background: var(--card-gray);
+}
+
+.admin__review-content {
+    flex: 1;
+}
+
+.admin__review-name {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--deep-blue);
+    margin-bottom: 4px;
+}
+
+.admin__review-text {
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+}
+
+.admin__review-actions {
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.admin__action-btn {
+    padding: 7px 14px;
+    border-radius: var(--radius-sm);
+    font-size: 0.8rem;
+    font-weight: 600;
+    border: none;
+    font-family: var(--font-body);
+    transition: background 0.2s, transform 0.2s;
+}
+
+.admin__action-btn:hover {
+    transform: translateY(-1px);
+}
+
+.admin__action-btn--edit {
+    background: rgba(74, 144, 217, 0.12);
+    color: var(--sky-blue);
+}
+
+.admin__action-btn--edit:hover {
+    background: rgba(74, 144, 217, 0.2);
+}
+
+.admin__action-btn--delete {
+    background: rgba(224, 85, 85, 0.1);
+    color: #e05555;
+}
+
+.admin__action-btn--delete:hover {
+    background: rgba(224, 85, 85, 0.18);
+}
+
+@media (max-width: 600px) {
+    .admin__card {
+        padding: 20px;
+    }
+
+    .admin__review-item {
+        flex-direction: column;
+    }
+
+    .admin__review-actions {
+        width: 100%;
+    }
+
+    .admin__action-btn {
+        flex: 1;
+        text-align: center;
+    }
+}

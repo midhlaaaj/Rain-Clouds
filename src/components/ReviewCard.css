@@ -1,0 +1,91 @@
+.review-card {
+    background: var(--white);
+    border-radius: var(--radius-md);
+    padding: 36px 32px 28px;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    transition: transform 0.3s var(--transition), box-shadow 0.3s var(--transition);
+    animation: fadeInUp 0.6s var(--transition) both;
+}
+
+.review-card:hover {
+    transform: translateY(-6px) scale(1.015);
+    box-shadow: var(--shadow-md);
+}
+
+/* Quotes */
+.review-card__quote {
+    font-family: 'Georgia', serif;
+    font-size: 5.5rem;
+    line-height: 1;
+    color: var(--sky-blue);
+    opacity: 0.35;
+    font-weight: 900;
+    letter-spacing: -0.02em;
+    user-select: none;
+}
+
+.review-card__quote--open {
+    align-self: flex-start;
+    margin-bottom: -16px;
+    margin-top: -8px;
+}
+
+.review-card__quote--close {
+    align-self: flex-end;
+    margin-top: -20px;
+    transform: scaleY(-1) rotate(180deg);
+}
+
+/* Text */
+.review-card__text {
+    font-size: 0.97rem;
+    line-height: 1.85;
+    color: var(--text-muted);
+    flex: 1;
+    padding: 0 4px;
+}
+
+/* Footer */
+.review-card__footer {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 24px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+}
+
+.review-card__avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--sky-blue), var(--mid-blue));
+    color: var(--white);
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.review-card__name {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--deep-blue);
+}
+
+@media (max-width: 480px) {
+    .review-card {
+        padding: 28px 22px 22px;
+    }
+
+    .review-card__quote {
+        font-size: 4.5rem;
+    }
+}

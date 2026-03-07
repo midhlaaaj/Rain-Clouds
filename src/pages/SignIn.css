@@ -1,0 +1,138 @@
+.signin-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(160deg, var(--deep-blue) 0%, #213660 50%, var(--mid-blue) 100%);
+    padding: 100px 24px 80px;
+    position: relative;
+    overflow: hidden;
+}
+
+.signin-page__bg {
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(ellipse at 20% 80%, rgba(74, 144, 217, 0.15) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 20%, rgba(74, 144, 217, 0.1) 0%, transparent 60%);
+}
+
+.signin-card {
+    width: 100%;
+    max-width: 440px;
+    border-radius: var(--radius-xl);
+    padding: 48px 40px;
+    position: relative;
+    z-index: 2;
+}
+
+.signin-card__top {
+    text-align: center;
+    margin-bottom: 32px;
+}
+
+.signin-card__icon {
+    font-size: 3rem;
+    margin-bottom: 12px;
+    animation: float-slow 4s ease-in-out infinite;
+}
+
+.signin-card__title {
+    font-family: var(--font-heading);
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--deep-blue);
+    margin-bottom: 8px;
+}
+
+.signin-card__subtitle {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+}
+
+/* Form */
+.signin-form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.signin-form__group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.signin-form__label {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    letter-spacing: 0.03em;
+}
+
+.signin-form__input {
+    padding: 12px 16px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    color: var(--text-dark);
+    background: var(--white);
+    transition: border-color 0.2s, box-shadow 0.2s;
+    outline: none;
+}
+
+.signin-form__input:focus {
+    border-color: var(--sky-blue);
+    box-shadow: 0 0 0 3px rgba(74, 144, 217, 0.12);
+}
+
+.signin-form__error {
+    font-size: 0.85rem;
+    color: #e05555;
+    background: rgba(224, 85, 85, 0.08);
+    padding: 10px 14px;
+    border-radius: var(--radius-sm);
+}
+
+.signin-form__success {
+    font-size: 0.85rem;
+    color: #4caf50;
+    background: rgba(76, 175, 80, 0.08);
+    padding: 10px 14px;
+    border-radius: var(--radius-sm);
+}
+
+.signin-form__submit {
+    width: 100%;
+    justify-content: center;
+    margin-top: 4px;
+}
+
+/* Toggle */
+.signin-card__toggle {
+    text-align: center;
+    margin-top: 24px;
+    font-size: 0.88rem;
+    color: var(--text-muted);
+}
+
+.signin-card__toggle button {
+    background: none;
+    color: var(--sky-blue);
+    font-weight: 600;
+    font-size: 0.88rem;
+    transition: color 0.2s;
+    font-family: var(--font-body);
+}
+
+.signin-card__toggle button:hover {
+    color: var(--mid-blue);
+}
+
+@media (max-width: 480px) {
+    .signin-card {
+        padding: 36px 24px;
+    }
+}

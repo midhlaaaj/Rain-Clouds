@@ -1,0 +1,115 @@
+import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { supabase } from '../lib/supabase';
+import { useAuth } from '../context/AuthContext';
+import './Dashboard.css';
+
+export default function Dashboard() {
+    const { user, isAdmin } = useAuth();
+    const [payments, setPayments] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        async function fetchPayments() {
+            const { data } = await supabase
+                .from('payments')
+                .select('*')
+                .eq('user_email', user.email)
+                .order('created_at', { ascending: false });
+            setPayments(data || []);
+            setLoading(false);
+        }
+        fetchPayments();
+    }, [user]);
+
+    const hasPurchased = payments.some(p => p.status === 'success');
+
+    return (
+        <div className="dashboard">
+            <div className="dashboard__inner container">
+                {/* Header */}
+                <div className="dashboard__header animate-fade-up">
+                    <div className="dashboard__avatar">
+                        {user.email?.charAt(0).toUpperCase()}
+                    </div>
+                    <div>
+                        <h1 className="dashboard__title">My Dashboard</h1>
+                        <p className="dashboard__email">{user.email}</p>
+                    </div>
+                    {isAdmin && (
+                        <Link to="/admin" className="dashboard__admin-link">
+                            ⚙ Admin Panel
+                        </Link>
+                    )}
+                </div>
+
+                {/* Status card */}
+                <div className={`dashboard__status-card animate-fade-up delay-1 ${hasPurchased ? 'dashboard__status-card--purchased' : ''}`}>
+                    {hasPurchased ? (
+                        <>
+                            <span className="dashboard__status-icon">📘</span>
+                            <div>
+                                <p className="dashboard__status-title">Rain Clouds — Purchased ✅</p>
+                                <p className="dashboard__status-desc">
+                                    Thank you for your purchase! Your ebook is ready to read.
+                                </p>
+                            </div>
+                        </>
+                    ) : (
+                        <>
+                            <span className="dashboard__status-icon">🛒</span>
+                            <div>
+                                <p className="dashboard__status-title">You haven't purchased Rain Clouds yet</p>
+                                <p className="dashboard__status-desc">
+                                    Get the ebook for just ₹149 and start reading today.
+                                </p>
+                            </div>
+                            <Link to="/" className="btn-primary dashboard__buy-link">
+                                <span>Buy Now</span>
+                            </Link>
+                        </>
+                    )}
+                </div>
+
+                {/* Purchase history */}
+                <div className="dashboard__section animate-fade-up delay-2">
+                    <h2 className="dashboard__section-title">Purchase History</h2>
+                    {loading ? (
+                        <div className="dashboard__loading"><div className="spinner" /></div>
+                    ) : payments.length === 0 ? (
+                        <div className="dashboard__empty">
+                            <p>No purchases yet. <Link to="/">Buy Rain Clouds →</Link></p>
+                        </div>
+                    ) : (
+                        <div className="dashboard__table-wrap">
+                            <table className="dashboard__table">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Payment ID</th>
+                                        <th>Amount</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {payments.map(p => (
+                                        <tr key={p.id}>
+                                            <td>{new Date(p.created_at).toLocaleDateString('en-IN')}</td>
+                                            <td className="dashboard__payment-id">{p.payment_id}</td>
+                                            <td>₹{p.amount}</td>
+                                            <td>
+                                                <span className={`dashboard__badge dashboard__badge--${p.status}`}>
+                                                    {p.status}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    )}
+                </div>
+            </div>
+        </div>
+    );
+}

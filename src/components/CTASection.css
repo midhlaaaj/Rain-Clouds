@@ -1,0 +1,106 @@
+.cta {
+    background: linear-gradient(160deg, var(--deep-blue) 0%, #213660 50%, var(--mid-blue) 100%);
+    padding: 100px 0;
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+}
+
+.cta__inner {
+    position: relative;
+    z-index: 2;
+}
+
+.cta__content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.cta__eyebrow {
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--sky-light);
+}
+
+.cta__title {
+    font-family: var(--font-heading);
+    font-size: clamp(1.9rem, 3.5vw, 3rem);
+    font-weight: 700;
+    color: var(--white);
+    line-height: 1.2;
+}
+
+.cta__desc {
+    font-size: 1rem;
+    line-height: 1.8;
+    color: rgba(255, 255, 255, 0.65);
+    max-width: 440px;
+}
+
+.cta__desc em {
+    color: var(--sky-light);
+    font-style: italic;
+}
+
+.cta__price-wrap {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.cta__price {
+    font-family: var(--font-heading);
+    font-size: 2.8rem;
+    font-weight: 800;
+    color: var(--white);
+}
+
+.cta__price-tag {
+    font-size: 0.82rem;
+    color: rgba(255, 255, 255, 0.45);
+}
+
+.cta__btn {
+    margin-top: 8px;
+}
+
+.cta__trust {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.4);
+}
+
+/* Decorative circles */
+.cta__decor {
+    position: absolute;
+    border-radius: 50%;
+    background: radial-gradient(ellipse, rgba(74, 144, 217, 0.2) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+.cta__decor--left {
+    width: 400px;
+    height: 400px;
+    bottom: -150px;
+    left: -100px;
+}
+
+.cta__decor--right {
+    width: 300px;
+    height: 300px;
+    top: -100px;
+    right: -50px;
+}
+
+@media (max-width: 480px) {
+    .cta {
+        padding: 72px 0;
+    }
+}

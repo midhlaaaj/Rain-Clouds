@@ -1,0 +1,206 @@
+.dashboard {
+    min-height: 100vh;
+    background: var(--soft-gray);
+    padding: 100px 0 80px;
+}
+
+.dashboard__inner {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+}
+
+/* Header */
+.dashboard__header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.dashboard__avatar {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--sky-blue), var(--mid-blue));
+    color: var(--white);
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 1.4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: var(--shadow-sm);
+}
+
+.dashboard__title {
+    font-family: var(--font-heading);
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--deep-blue);
+}
+
+.dashboard__email {
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    margin-top: 2px;
+}
+
+.dashboard__admin-link {
+    margin-left: auto;
+    background: var(--deep-blue);
+    color: var(--white);
+    padding: 8px 18px;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    font-family: var(--font-heading);
+    transition: background 0.2s, transform 0.2s;
+}
+
+.dashboard__admin-link:hover {
+    background: var(--mid-blue);
+    transform: translateY(-1px);
+}
+
+/* Status card */
+.dashboard__status-card {
+    background: var(--white);
+    border-radius: var(--radius-md);
+    padding: 28px 32px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border);
+    flex-wrap: wrap;
+}
+
+.dashboard__status-card--purchased {
+    border-color: rgba(76, 175, 80, 0.3);
+    background: linear-gradient(135deg, #f0faf0, #ffffff);
+}
+
+.dashboard__status-icon {
+    font-size: 2.2rem;
+    flex-shrink: 0;
+}
+
+.dashboard__status-title {
+    font-family: var(--font-heading);
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--deep-blue);
+    margin-bottom: 4px;
+}
+
+.dashboard__status-desc {
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+}
+
+.dashboard__buy-link {
+    margin-left: auto;
+}
+
+/* Section */
+.dashboard__section {
+    background: var(--white);
+    border-radius: var(--radius-md);
+    padding: 28px 32px;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border);
+}
+
+.dashboard__section-title {
+    font-family: var(--font-heading);
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--deep-blue);
+    margin-bottom: 20px;
+}
+
+.dashboard__loading,
+.dashboard__empty {
+    display: flex;
+    justify-content: center;
+    padding: 32px 0;
+}
+
+.dashboard__empty p {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+}
+
+.dashboard__empty a {
+    color: var(--sky-blue);
+    font-weight: 600;
+}
+
+/* Table */
+.dashboard__table-wrap {
+    overflow-x: auto;
+}
+
+.dashboard__table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+.dashboard__table th {
+    text-align: left;
+    padding: 10px 14px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--border);
+}
+
+.dashboard__table td {
+    padding: 14px 14px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-dark);
+}
+
+.dashboard__table tr:last-child td {
+    border-bottom: none;
+}
+
+.dashboard__payment-id {
+    font-family: monospace;
+    font-size: 0.82rem;
+    color: var(--text-muted);
+}
+
+.dashboard__badge {
+    padding: 4px 12px;
+    border-radius: 50px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+.dashboard__badge--success {
+    background: rgba(76, 175, 80, 0.12);
+    color: #2e7d32;
+}
+
+.dashboard__badge--failed {
+    background: rgba(224, 85, 85, 0.12);
+    color: #c62828;
+}
+
+@media (max-width: 600px) {
+    .dashboard__section {
+        padding: 20px;
+    }
+
+    .dashboard__status-card {
+        padding: 20px;
+    }
+}

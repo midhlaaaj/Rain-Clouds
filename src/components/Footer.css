@@ -1,0 +1,87 @@
+.footer {
+    background: var(--deep-blue);
+    color: rgba(255, 255, 255, 0.75);
+    padding: 56px 0 32px;
+}
+
+.footer__inner {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+}
+
+.footer__top {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    text-align: center;
+}
+
+.footer__brand {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.footer__brand-icon {
+    font-size: 1.8rem;
+    animation: float-slow 4s ease-in-out infinite;
+}
+
+.footer__brand-name {
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--white);
+    letter-spacing: 0.02em;
+}
+
+.footer__tagline {
+    font-size: 0.9rem;
+    line-height: 1.8;
+    color: rgba(255, 255, 255, 0.55);
+    font-style: italic;
+}
+
+.footer__divider {
+    height: 1px;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.footer__bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.footer__copy {
+    font-size: 0.82rem;
+    color: rgba(255, 255, 255, 0.45);
+}
+
+.footer__nav {
+    display: flex;
+    gap: 24px;
+}
+
+.footer__nav a {
+    font-size: 0.88rem;
+    color: rgba(255, 255, 255, 0.6);
+    transition: color 0.2s;
+    font-weight: 500;
+}
+
+.footer__nav a:hover {
+    color: var(--sky-blue);
+}
+
+@media (max-width: 600px) {
+    .footer__bottom {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+}
