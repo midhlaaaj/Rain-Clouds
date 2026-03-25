@@ -16,6 +16,7 @@ export default function PDFReader({ file = '/ebook.pdf', onClose }) {
     const [isFullscreen, setIsFullscreen] = useState(false);
     const [isBookmarked, setIsBookmarked] = useState(false);
     const [isScrolling, setIsScrolling] = useState(false);
+    const [direction, setDirection] = useState(0); // 1 for next, -1 for prev
 
     // Load bookmark on mount
     useEffect(() => {
@@ -51,8 +52,15 @@ export default function PDFReader({ file = '/ebook.pdf', onClose }) {
         setNumPages(numPages);
     }
 
-    const goToPrevPage = () => setPageNumber(prev => Math.max(prev - 1, 1));
-    const goToNextPage = () => setPageNumber(prev => Math.min(prev + 1, numPages));
+    const goToPrevPage = () => {
+        setDirection(-1);
+        setPageNumber(prev => Math.max(prev - 1, 1));
+    };
+
+    const goToNextPage = () => {
+        setDirection(1);
+        setPageNumber(prev => Math.min(prev + 1, numPages));
+    };
 
     // Handle horizontal scroll (trackpad/mouse wheel)
     useEffect(() => {
@@ -113,6 +121,23 @@ export default function PDFReader({ file = '/ebook.pdf', onClose }) {
         }
     };
 
+    const variants = {
+        enter: (direction) => ({
+            x: direction > 0 ? 100 : -100,
+            opacity: 0,
+        }),
+        center: {
+            zIndex: 1,
+            x: 0,
+            opacity: 1,
+        },
+        exit: (direction) => ({
+            zIndex: 0,
+            x: direction < 0 ? 100 : -100,
+            opacity: 0,
+        }),
+    };
+
     return (
         <div className={`pdf-reader ${isFullscreen ? 'pdf-reader--fullscreen' : ''}`}>
             {/* Toolbar */}
@@ -138,14 +163,19 @@ export default function PDFReader({ file = '/ebook.pdf', onClose }) {
             </div>
 
             {/* Content */}
-            <div className="pdf-content" onClick={handleTap}>
-                <AnimatePresence mode="wait">
+            <div className="pdf-content" onClick={handleTap} style={{ touchAction: 'none' }}>
+                <AnimatePresence mode="wait" custom={direction}>
                     <motion.div
                         key={pageNumber}
-                        initial={{ opacity: 0, x: 20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: -20 }}
-                        transition={{ duration: 0.3 }}
+                        custom={direction}
+                        variants={variants}
+                        initial="enter"
+                        animate="center"
+                        exit="exit"
+                        transition={{ 
+                            x: { type: "spring", stiffness: 300, damping: 30 },
+                            opacity: { duration: 0.2 }
+                        }}
                         onPanEnd={handleSwipe}
                         className="pdf-page-container"
                     >
