@@ -15,6 +15,7 @@ export default function PDFReader({ file = '/ebook.pdf', onClose }) {
     const [scale, setScale] = useState(1.0);
     const [isFullscreen, setIsFullscreen] = useState(false);
     const [isBookmarked, setIsBookmarked] = useState(false);
+    const [isScrolling, setIsScrolling] = useState(false);
 
     // Load bookmark on mount
     useEffect(() => {
@@ -53,9 +54,51 @@ export default function PDFReader({ file = '/ebook.pdf', onClose }) {
     const goToPrevPage = () => setPageNumber(prev => Math.max(prev - 1, 1));
     const goToNextPage = () => setPageNumber(prev => Math.min(prev + 1, numPages));
 
+    // Handle horizontal scroll (trackpad/mouse wheel)
+    useEffect(() => {
+        const handleWheel = (e) => {
+            // Check if horizontal delta is significant
+            if (Math.abs(e.deltaX) > 30 && !isScrolling) {
+                setIsScrolling(true);
+                
+                if (e.deltaX > 0) {
+                    goToNextPage();
+                } else {
+                    goToPrevPage();
+                }
+
+                // Cooldown to prevent rapid page turns
+                setTimeout(() => {
+                    setIsScrolling(false);
+                }, 1000); 
+            }
+        };
+
+        window.addEventListener('wheel', handleWheel, { passive: true });
+        return () => window.removeEventListener('wheel', handleWheel);
+    }, [numPages, isScrolling]);
+
     const handleSwipe = (event, info) => {
-        if (info.offset.x > 100) goToPrevPage();
-        else if (info.offset.x < -100) goToNextPage();
+        // Swipe left (negative x offset) -> Next page
+        // Swipe right (positive x offset) -> Previous page
+        if (info.offset.x > 50) goToPrevPage();
+        else if (info.offset.x < -50) goToNextPage();
+    };
+
+    const handleTap = (e) => {
+        // Only trigger if clicking on the page container, not on toolbar or other buttons
+        if (e.target.closest('.pdf-toolbar') || e.target.closest('.pdf-nav') || e.target.closest('.pdf-progress')) {
+            return;
+        }
+
+        const width = window.innerWidth;
+        const x = e.clientX;
+
+        if (x < width / 3) {
+            goToPrevPage();
+        } else if (x > (width * 2) / 3) {
+            goToNextPage();
+        }
     };
 
     const toggleFullscreen = () => {
@@ -95,7 +138,7 @@ export default function PDFReader({ file = '/ebook.pdf', onClose }) {
             </div>
 
             {/* Content */}
-            <div className="pdf-content">
+            <div className="pdf-content" onClick={handleTap}>
                 <AnimatePresence mode="wait">
                     <motion.div
                         key={pageNumber}
