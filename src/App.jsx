@@ -20,10 +20,6 @@ function App() {
   const isSuccess = location.pathname === '/success';
   const isAuthPage = location.pathname === '/signin' || location.pathname === '/signup';
 
-  useEffect(() => {
-    console.log('App Mounted at:', location.pathname, 'Loading:', loading);
-  }, [loading, location.pathname]);
-
   if (loading) {
     return (
       <div className="loading-screen">

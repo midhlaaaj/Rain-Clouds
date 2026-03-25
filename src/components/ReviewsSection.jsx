@@ -7,7 +7,7 @@ const FALLBACK_REVIEWS = [
     {
         id: 1,
         reviewer_name: 'Priya Menon',
-        review_text: "Rain Clouds feels like curling up by a window during a monsoon. Every poem is a quiet thunderclap — it hits you softly but leaves an echo that stays for days.",
+        review_text: "Rain Clouds feels like curling up by a window during a monsoon. Every story is a quiet thunderclap — it hits you softly but leaves an echo that stays for days.",
     },
     {
         id: 2,
@@ -37,7 +37,7 @@ const FALLBACK_REVIEWS = [
 ];
 
 export default function ReviewsSection() {
-    const [reviews, setReviews] = useState(FALLBACK_REVIEWS);
+    const [reviews, setReviews] = useState([]);
     const [loading, setLoading] = useState(true);
     const [selectedReview, setSelectedReview] = useState(null);
 
@@ -48,8 +48,14 @@ export default function ReviewsSection() {
                 .select('*')
                 .order('created_at', { ascending: false });
 
-            if (!error && data && data.length > 0) {
-                setReviews(data);
+            if (!error && data) {
+                // Ensure absolute uniqueness by ID
+                const uniqueData = Array.from(new Map(data.map(item => [item.id, item])).values());
+                console.log('ReviewsSection: Loaded', uniqueData.length, 'unique reviews from Supabase');
+                setReviews(uniqueData);
+            } else if (error) {
+                console.error('ReviewsSection: Error fetching reviews:', error);
+                setReviews(FALLBACK_REVIEWS);
             }
             setLoading(false);
         }
@@ -67,35 +73,43 @@ export default function ReviewsSection() {
         return () => window.removeEventListener('resize', handleResize);
     }, []);
 
+    const [scrollDirection, setScrollDirection] = useState(1); // 1 for forward, -1 for backward
     const itemsPerView = windowWidth <= 768 ? 1 : 3;
-    const originalLength = reviews.length;
-
-    // Multiply reviews to give a continuous feeling
-    const extendedReviews = [...reviews, ...reviews, ...reviews, ...reviews];
 
     // The main auto-scroll timer
     useEffect(() => {
-        if (loading || originalLength <= itemsPerView || isHovered) return;
+        if (loading || reviews.length <= itemsPerView || isHovered) return;
 
         const interval = setInterval(() => {
             if (scrollRef.current) {
                 const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
-                
-                // If we reach near the end, smooth scroll back to the start
-                if (scrollLeft + clientWidth >= scrollWidth - 10) {
-                    scrollRef.current.scrollTo({ left: 0, behavior: 'smooth' });
+                const itemElement = scrollRef.current.children[0];
+                if (!itemElement) return;
+
+                const itemWidth = itemElement.offsetWidth + 24; // 24px is gap
+
+                if (scrollDirection === 1) {
+                    // Moving forward
+                    if (scrollLeft + clientWidth >= scrollWidth - 10) {
+                        setScrollDirection(-1);
+                        scrollRef.current.scrollBy({ left: -itemWidth, behavior: 'smooth' });
+                    } else {
+                        scrollRef.current.scrollBy({ left: itemWidth, behavior: 'smooth' });
+                    }
                 } else {
-                    const itemElement = scrollRef.current.children[0];
-                    if (itemElement) {
-                         const itemWidth = itemElement.offsetWidth + 24; // 24px is gap
-                         scrollRef.current.scrollBy({ left: itemWidth, behavior: 'smooth' });
+                    // Moving backward
+                    if (scrollLeft <= 10) {
+                        setScrollDirection(1);
+                        scrollRef.current.scrollBy({ left: itemWidth, behavior: 'smooth' });
+                    } else {
+                        scrollRef.current.scrollBy({ left: -itemWidth, behavior: 'smooth' });
                     }
                 }
             }
         }, 3000); // Scroll every 3 seconds
 
         return () => clearInterval(interval);
-    }, [loading, originalLength, isHovered, itemsPerView]);
+    }, [loading, reviews.length, isHovered, itemsPerView, scrollDirection]);
 
     return (
         <section className="reviews">
@@ -119,7 +133,7 @@ export default function ReviewsSection() {
                         onMouseLeave={() => setIsHovered(false)}
                     >
                         <div className="reviews__carousel-track" ref={scrollRef}>
-                            {extendedReviews.map((r, index) => (
+                            {reviews.map((r, index) => (
                                 <div className="reviews__carousel-item" key={`${r.id}-${index}`}>
                                     <ReviewCard 
                                         name={r.reviewer_name} 
