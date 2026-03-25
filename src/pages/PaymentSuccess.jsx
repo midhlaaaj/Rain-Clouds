@@ -17,24 +17,24 @@ export default function PaymentSuccess() {
                 <h1 className="success-card__title">Payment Successful!</h1>
                 <p className="success-card__subtitle">Thank you for purchasing മഴമേഘങ്ങളെ പ്രണയിച്ചവൾ</p>
                 <p className="success-card__desc">
-                    Your ebook purchase has been confirmed. You can access your purchase
-                    history from your dashboard. Happy reading! 🌧
+                    Your ebook purchase has been confirmed. You can start reading instantly
+                    or access it later from your dashboard. Happy reading! 🌧
                 </p>
 
                 <div className="success-card__detail">
                     <span>📘</span>
                     <div>
                         <p className="success-card__detail-book">മഴമേഘങ്ങളെ പ്രണയിച്ചവൾ — A Collection of Emotions</p>
-                        <p className="success-card__detail-amount">₹149 · One-time purchase</p>
+                        <p className="success-card__detail-amount">₹1 · One-time purchase</p>
                     </div>
                 </div>
 
                 <div className="success-card__actions">
-                    <Link to="/dashboard" className="btn-primary">
-                        <span>Go to Dashboard</span>
+                    <Link to="/read" className="btn-primary">
+                        <span>Start Reading Now</span>
                     </Link>
-                    <Link to="/" className="success-card__home-link">
-                        ← Back to Home
+                    <Link to="/dashboard" className="success-card__home-link">
+                        Go to Dashboard
                     </Link>
                 </div>
             </div>

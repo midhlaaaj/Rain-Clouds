@@ -7,12 +7,14 @@ import SignIn from './pages/SignIn';
 import Dashboard from './pages/Dashboard';
 import AdminPanel from './pages/AdminPanel';
 import PaymentSuccess from './pages/PaymentSuccess';
+import PDFReaderPage from './pages/PDFReaderPage';
 import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
   const { loading } = useAuth();
   const location = useLocation();
   const isHome = location.pathname === '/';
+  const isSignIn = location.pathname === '/signin';
 
   if (loading) {
     return (
@@ -24,12 +26,20 @@ function App() {
 
   return (
     <>
-      <Header solid={!isHome} />
+      <Header darkText={!isHome && !isSignIn} />
       <main>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/signin" element={<SignIn />} />
           <Route path="/success" element={<PaymentSuccess />} />
+          <Route
+            path="/read"
+            element={
+              <ProtectedRoute>
+                <PDFReaderPage />
+              </ProtectedRoute>
+            }
+          />
           <Route
             path="/dashboard"
             element={
@@ -48,7 +58,7 @@ function App() {
           />
         </Routes>
       </main>
-      <Footer />
+      {!isSignIn && <Footer />}
     </>
   );
 }

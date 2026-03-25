@@ -4,22 +4,21 @@ import { useAuth } from '../context/AuthContext';
 import Sidebar from './Sidebar';
 import './Header.css';
 
-export default function Header({ solid = false }) {
-    const [scrolled, setScrolled] = useState(solid);
+export default function Header({ darkText = false }) {
+    const [scrolled, setScrolled] = useState(false);
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const { user } = useAuth();
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (solid) return; // If solid is forced, don't change on scroll
         const onScroll = () => setScrolled(window.scrollY > 30);
         window.addEventListener('scroll', onScroll, { passive: true });
         return () => window.removeEventListener('scroll', onScroll);
-    }, [solid]);
+    }, []);
 
     return (
         <>
-            <header className={`header ${scrolled ? 'header--scrolled' : ''}`}>
+            <header className={`header ${scrolled ? 'header--scrolled' : ''} ${darkText ? 'header--dark-text' : ''}`}>
                 <div className="header__inner">
                     {/* Left: Hamburger */}
                     <button

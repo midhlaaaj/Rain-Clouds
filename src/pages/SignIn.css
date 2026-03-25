@@ -1,20 +1,51 @@
 .signin-page {
     min-height: 100vh;
+    min-height: 100svh;
     display: flex;
     align-items: center;
     justify-content: center;
     background: linear-gradient(160deg, var(--deep-blue) 0%, #213660 50%, var(--mid-blue) 100%);
-    padding: 100px 24px 80px;
+    padding: 100px 24px 40px; /* Added 100px top padding for header */
     position: relative;
     overflow: hidden;
 }
 
-.signin-page__bg {
+.rain-container {
     position: absolute;
     inset: 0;
-    background:
-        radial-gradient(ellipse at 20% 80%, rgba(74, 144, 217, 0.15) 0%, transparent 60%),
-        radial-gradient(ellipse at 80% 20%, rgba(74, 144, 217, 0.1) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 1;
+}
+
+.raindrop {
+    position: absolute;
+    top: -100px;
+    width: 2px;
+    background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.4));
+    animation: rain linear infinite;
+}
+
+@keyframes rain {
+    to { transform: translateY(120vh); }
+}
+
+.cloud-decoration {
+    position: absolute;
+    fill: rgba(255, 255, 255, 0.03);
+    pointer-events: none;
+    z-index: 1;
+}
+
+.cloud-decoration--1 {
+    top: 5%;
+    right: -60px;
+    animation: float-slow 15s ease-in-out infinite;
+}
+
+.cloud-decoration--2 {
+    bottom: 10%;
+    left: -40px;
+    animation: float-slow 20s ease-in-out infinite reverse;
 }
 
 .signin-card {
@@ -23,7 +54,7 @@
     border-radius: var(--radius-xl);
     padding: 48px 40px;
     position: relative;
-    z-index: 2;
+    z-index: 5; /* Lowered from 10 to ensure it stays below header (z-100) */
 }
 
 .signin-card__top {
@@ -64,11 +95,31 @@
     gap: 6px;
 }
 
+.signin-form__label-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
 .signin-form__label {
     font-size: 0.82rem;
     font-weight: 600;
     color: var(--text-dark);
     letter-spacing: 0.03em;
+}
+
+.signin-form__forgot-btn {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--sky-blue);
+    background: none;
+    padding: 0;
+    transition: color 0.2s;
+}
+
+.signin-form__forgot-btn:hover {
+    color: var(--mid-blue);
+    text-decoration: underline;
 }
 
 .signin-form__input {
@@ -86,6 +137,36 @@
 .signin-form__input:focus {
     border-color: var(--sky-blue);
     box-shadow: 0 0 0 3px rgba(74, 144, 217, 0.12);
+}
+
+.signin-form__password-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.signin-form__input--password {
+    width: 100%;
+    padding-right: 48px;
+}
+
+.signin-form__toggle-password {
+    position: absolute;
+    right: 12px;
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s;
+    z-index: 5;
+}
+
+.signin-form__toggle-password:hover {
+    color: var(--sky-blue);
 }
 
 .signin-form__error {

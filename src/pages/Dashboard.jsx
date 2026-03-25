@@ -51,8 +51,14 @@ export default function Dashboard() {
                             <div>
                                 <p className="dashboard__status-title">Rain Clouds — Purchased ✅</p>
                                 <p className="dashboard__status-desc">
-                                    Thank you for your purchase! Your ebook is ready to read.
+                                    Your ebook is ready. Continue from where you left off.
                                 </p>
+                                <Link to="/read" className="btn-primary dashboard__read-link" style={{ marginTop: '16px' }}>
+                                    <span>Read Ebook</span>
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" style={{ marginLeft: '8px' }}>
+                                        <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                    </svg>
+                                </Link>
                             </div>
                         </>
                     ) : (
@@ -71,44 +77,45 @@ export default function Dashboard() {
                     )}
                 </div>
 
-                {/* Purchase history */}
-                <div className="dashboard__section animate-fade-up delay-2">
-                    <h2 className="dashboard__section-title">Purchase History</h2>
-                    {loading ? (
-                        <div className="dashboard__loading"><div className="spinner" /></div>
-                    ) : payments.length === 0 ? (
-                        <div className="dashboard__empty">
-                            <p>No purchases yet. <Link to="/">Buy Rain Clouds →</Link></p>
-                        </div>
-                    ) : (
-                        <div className="dashboard__table-wrap">
-                            <table className="dashboard__table">
-                                <thead>
-                                    <tr>
-                                        <th>Date</th>
-                                        <th>Payment ID</th>
-                                        <th>Amount</th>
-                                        <th>Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {payments.map(p => (
-                                        <tr key={p.id}>
-                                            <td>{new Date(p.created_at).toLocaleDateString('en-IN')}</td>
-                                            <td className="dashboard__payment-id">{p.payment_id}</td>
-                                            <td>₹{p.amount}</td>
-                                            <td>
-                                                <span className={`dashboard__badge dashboard__badge--${p.status}`}>
-                                                    {p.status}
-                                                </span>
-                                            </td>
+                {!hasPurchased && (
+                    <div className="dashboard__section animate-fade-up delay-2">
+                        <h2 className="dashboard__section-title">Purchase History</h2>
+                        {loading ? (
+                            <div className="dashboard__loading"><div className="spinner" /></div>
+                        ) : payments.length === 0 ? (
+                            <div className="dashboard__empty">
+                                <p>No purchases yet. <Link to="/">Buy Rain Clouds →</Link></p>
+                            </div>
+                        ) : (
+                            <div className="dashboard__table-wrap">
+                                <table className="dashboard__table">
+                                    <thead>
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>Payment ID</th>
+                                            <th>Amount</th>
+                                            <th>Status</th>
                                         </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </div>
-                    )}
-                </div>
+                                    </thead>
+                                    <tbody>
+                                        {payments.map(p => (
+                                            <tr key={p.id}>
+                                                <td>{new Date(p.created_at).toLocaleDateString('en-IN')}</td>
+                                                <td className="dashboard__payment-id">{p.payment_id}</td>
+                                                <td>₹{p.amount}</td>
+                                                <td>
+                                                    <span className={`dashboard__badge dashboard__badge--${p.status}`}>
+                                                        {p.status}
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        )}
+                    </div>
+                )}
             </div>
         </div>
     );

@@ -6,7 +6,7 @@ export default function AboutAuthor() {
             <div className="about__inner container">
                 <div className="about__image-col">
                     <div className="about__image-wrap">
-                        <img src="/author-photo.png" alt="Author of Rain Clouds" className="about__image" />
+                        <img src="/author.jpeg" alt="Author Souda Kanthapuram" className="about__image" />
                     </div>
                 </div>
 
@@ -15,15 +15,14 @@ export default function AboutAuthor() {
                     <h2 className="about__name">Souda Kanthapuram</h2>
                     <div className="about__divider" />
                     <p className="about__bio">
-                        Souda Kanthapuram is a poet and storyteller from the coastal town of Mangalore, where
-                        the monsoon rains shaped her earliest memories. Her writing lives in the space
-                        between the whispered and the unspoken — intimate, sincere, and deeply human.
+                        കോഴിക്കോട് ജില്ലയിലെ കാന്തപുരത്താണ് സ്വദേശം. സാമൂഹിക ജീവകാരുണ്യപ്രവർത്തനങ്ങളിൽ താല്പര്യം. 
+                        ഹെൽത്ത് കെയർ ഫൌണ്ടേഷൻ കാരുണ്യതീരത്തിന്റെ സജീവ പ്രവർത്തകയാണ്. സൗദി അറേബ്യയിലെ ജിദ്ദയിൽ 
+                        കുടുംബത്തോടൊപ്പം താമസിക്കുന്നു.
                     </p>
                     <p className="about__bio">
-                        <em>മഴമേഘങ്ങളെ പ്രണയിച്ചവൾ</em> is her debut ebook, a carefully curated collection of poems
-                        and prose essays exploring love, grief, memory, and the quiet beauty of
-                        everyday moments. It is a book for those who find solace in soft rain
-                        and the smell of wet earth.
+                        പ്രവാസത്തിലെ സാമൂഹിക സാംസ്കാരിക മേഖലയിൽ നിരന്തരം ഇടപെടാറുണ്ട്. നിലവിൽ ജിദ്ദ സിജി വിമൻ 
+                        കലക്ടീവിന്റെ ജനറൽ സെക്രട്ടറിയാണ്. ഭർത്താവ് : അബ്ദുൽ ജബ്ബാർ. മക്കൾ : ഫാത്തിമ റെന, 
+                        മുഹമ്മദ് റബാഹ്, മുഹമ്മദ് റസാൻ.
                     </p>
                     <div className="about__stats">
                         <div className="about__stat">

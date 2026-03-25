@@ -18,8 +18,8 @@
 
 .about__image-wrap {
     position: relative;
-    width: 320px;
-    height: 380px;
+    width: 400px;
+    height: 480px;
     flex-shrink: 0;
 }
 
@@ -122,8 +122,8 @@
     }
 
     .about__image-wrap {
-        width: 260px;
-        height: 310px;
+        width: 320px;
+        height: 380px;
     }
 
     .about__divider {

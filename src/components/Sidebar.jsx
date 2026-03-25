@@ -36,6 +36,17 @@ const NAV_LINKS = [
             </svg>
         )
     },
+    {
+        to: '/read',
+        label: 'Read Ebook',
+        icon: (
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path d="M4 19.5A2.5 2.5 0 016.5 17H20" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+        ),
+        protected: true
+    },
 ];
 
 export default function Sidebar({ isOpen, onClose }) {
@@ -80,6 +91,7 @@ export default function Sidebar({ isOpen, onClose }) {
                 <nav className="sidebar__nav">
                     {NAV_LINKS.filter(l => {
                         if (l.to === '/signin' && user) return false;
+                        if (l.protected && !user) return false;
                         return true;
                     }).map((link) => (
                         <Link

@@ -4,7 +4,7 @@ import { supabase } from '../lib/supabase';
 import './CTASection.css';
 
 const RAZORPAY_KEY = import.meta.env.VITE_RAZORPAY_KEY_ID;
-const AMOUNT = 14900;
+const AMOUNT = 100;
 
 function loadRazorpayScript() {
     return new Promise((resolve) => {
@@ -18,7 +18,7 @@ function loadRazorpayScript() {
 }
 
 export default function CTASection() {
-    const { user } = useAuth();
+    const { user, hasPurchased, checkPurchase } = useAuth();
     const navigate = useNavigate();
 
     async function handleBuyNow() {
@@ -28,25 +28,23 @@ export default function CTASection() {
             return;
         }
 
-        const orderId = `order_demo_${Date.now()}`;
-
         const options = {
             key: RAZORPAY_KEY,
             amount: AMOUNT,
             currency: 'INR',
             name: 'Rain Clouds',
             description: 'മഴമേഘങ്ങളെ പ്രണയിച്ചവൾ — A Collection of Emotions',
-            order_id: orderId,
             prefill: { email: user?.email || '' },
             theme: { color: '#4a90d9' },
             handler: async function (response) {
                 await supabase.from('payments').insert({
                     user_email: user?.email || 'guest',
                     payment_id: response.razorpay_payment_id,
-                    order_id: response.razorpay_order_id || orderId,
-                    amount: 149,
+                    order_id: response.razorpay_order_id,
+                    amount: 1,
                     status: 'success',
                 });
+                await checkPurchase(user?.email);
                 navigate('/success');
             },
         };
@@ -66,19 +64,23 @@ export default function CTASection() {
                         A small price for a book that stays with you.
                     </p>
 
-                    <div className="cta__price-wrap">
-                        <span className="cta__price">₹149</span>
-                        <span className="cta__price-tag">One-time • Instant PDF delivery</span>
-                    </div>
+                    {!hasPurchased && (
+                        <div className="cta__price-wrap">
+                            <span className="cta__price">₹1</span>
+                            <span className="cta__price-tag">One-time • Instant PDF delivery</span>
+                        </div>
+                    )}
 
-                    <button className="btn-primary cta__btn" onClick={handleBuyNow}>
-                        <span>Get the Ebook — ₹149</span>
+                    <button className="btn-primary cta__btn" onClick={hasPurchased ? () => navigate('/read') : handleBuyNow}>
+                        <span>{hasPurchased ? 'Start Reading Now' : 'Get the Ebook — ₹1'}</span>
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
                             <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                         </svg>
                     </button>
 
-                    <p className="cta__trust">🔒 Secured by Razorpay · No hidden charges</p>
+                    {!hasPurchased && (
+                        <p className="cta__trust">🔒 Secured by Razorpay · No hidden charges</p>
+                    )}
                 </div>
             </div>
 

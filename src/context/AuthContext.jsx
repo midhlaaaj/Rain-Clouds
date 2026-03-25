@@ -7,39 +7,11 @@ export function AuthProvider({ children }) {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
     const [isAdmin, setIsAdmin] = useState(false);
+    const [hasPurchased, setHasPurchased] = useState(false);
 
-    useEffect(() => {
-        supabase.auth.getSession().then(async ({ data: { session } }) => {
-            try {
-                setUser(session?.user ?? null);
-                if (session?.user) {
-                    await checkAdmin(session.user.id);
-                }
-            } catch (e) {
-                console.warn('Auth init error:', e);
-            } finally {
-                setLoading(false); // always unblock the app
-            }
-        });
-
-        const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
-            try {
-                setUser(session?.user ?? null);
-                if (session?.user) {
-                    await checkAdmin(session.user.id);
-                } else {
-                    setIsAdmin(false);
-                }
-            } catch (e) {
-                console.warn('Auth change error:', e);
-            }
-        });
-
-        return () => subscription.unsubscribe();
-    }, []);
-
-    // Checks admin role with a 5-second timeout so it never hangs the app
+    // Internal check functions moved above effects for clarity
     async function checkAdmin(userId) {
+        if (!userId) return;
         const timeout = new Promise((_, reject) =>
             setTimeout(() => reject(new Error('checkAdmin timeout')), 5000)
         );
@@ -58,12 +30,64 @@ export function AuthProvider({ children }) {
         }
     }
 
+    async function checkPurchase(email) {
+        if (!email) return;
+        const timeout = new Promise((_, reject) =>
+            setTimeout(() => reject(new Error('checkPurchase timeout')), 5000)
+        );
+        const query = supabase
+            .from('payments')
+            .select('status')
+            .eq('user_email', email)
+            .eq('status', 'success')
+            .maybeSingle();
+
+        try {
+            const { data } = await Promise.race([query, timeout]);
+            setHasPurchased(!!data);
+        } catch (e) {
+            console.warn('checkPurchase failed:', e.message);
+            setHasPurchased(false);
+        }
+    }
+
+    useEffect(() => {
+        // Initial session check
+        supabase.auth.getSession().then(({ data: { session } }) => {
+            const currentUser = session?.user ?? null;
+            setUser(currentUser);
+            setLoading(false); // ALWAYS unblock the app here
+
+            if (currentUser) {
+                // Background checks
+                checkAdmin(currentUser.id);
+                checkPurchase(currentUser.email);
+            }
+        });
+
+        // Background listener
+        const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+            const currentUser = session?.user ?? null;
+            setUser(currentUser);
+
+            if (currentUser) {
+                checkAdmin(currentUser.id);
+                checkPurchase(currentUser.email);
+            } else {
+                setIsAdmin(false);
+                setHasPurchased(false);
+            }
+        });
+
+        return () => subscription.unsubscribe();
+    }, []);
+
     async function signOut() {
         await supabase.auth.signOut();
     }
 
     return (
-        <AuthContext.Provider value={{ user, loading, isAdmin, signOut }}>
+        <AuthContext.Provider value={{ user, loading, isAdmin, hasPurchased, checkPurchase, signOut }}>
             {children}
         </AuthContext.Provider>
     );

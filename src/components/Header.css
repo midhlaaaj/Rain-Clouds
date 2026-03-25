@@ -41,6 +41,19 @@
     background: rgba(74, 144, 217, 0.1);
 }
 
+/* Dark text theme for light backgrounds (Dashboard, etc.) */
+.header--dark-text:not(.header--scrolled) .header__hamburger span {
+    background: var(--deep-blue);
+}
+
+.header--dark-text:not(.header--scrolled) .header__brand {
+    color: var(--deep-blue);
+}
+
+.header--dark-text:not(.header--scrolled) .header__profile {
+    color: var(--deep-blue);
+}
+
 
 .header__inner {
     display: grid;
