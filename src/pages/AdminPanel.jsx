@@ -13,20 +13,77 @@ export default function AdminPanel() {
     const [toast, setToast] = useState('');
     const [bookPrice, setBookPrice] = useState(1);
     const [priceSaving, setPriceSaving] = useState(false);
+    
+    // Sales Dashboard States
+    const [allPayments, setAllPayments] = useState([]);
+    const [filteredPayments, setFilteredPayments] = useState([]);
+    const [dateFilter, setDateFilter] = useState('all'); // all, daily, weekly, monthly, custom
+    const [customDates, setCustomDates] = useState({ start: '', end: '' });
+    const [salesLoading, setSalesLoading] = useState(true);
 
     useEffect(() => {
         fetchReviews();
         fetchPrice();
+        fetchPayments();
     }, []);
+
+    useEffect(() => {
+        applyFilters();
+    }, [dateFilter, customDates, allPayments]);
 
     async function fetchPrice() {
         const { data } = await supabase
             .from('settings')
             .select('value')
             .eq('key', 'book_price')
-            .single();
+            .maybeSingle();
         if (data) setBookPrice(Number(data.value));
     }
+
+    async function fetchPayments() {
+        setSalesLoading(true);
+        const { data, error } = await supabase
+            .from('payments')
+            .select('*')
+            .eq('status', 'success')
+            .order('created_at', { ascending: false });
+        
+        if (data) {
+            setAllPayments(data);
+            setFilteredPayments(data);
+        }
+        setSalesLoading(false);
+    }
+
+    function applyFilters() {
+        let filtered = [...allPayments];
+        const now = new Date();
+
+        if (dateFilter === 'daily') {
+            const today = new Date(now.setHours(0,0,0,0));
+            filtered = allPayments.filter(p => new Date(p.created_at) >= today);
+        } else if (dateFilter === 'weekly') {
+            const lastWeek = new Date(now.setDate(now.getDate() - 7));
+            filtered = allPayments.filter(p => new Date(p.created_at) >= lastWeek);
+        } else if (dateFilter === 'monthly') {
+            const lastMonth = new Date(now.setMonth(now.getMonth() - 1));
+            filtered = allPayments.filter(p => new Date(p.created_at) >= lastMonth);
+        } else if (dateFilter === 'custom') {
+            if (customDates.start) {
+                const start = new Date(customDates.start);
+                filtered = filtered.filter(p => new Date(p.created_at) >= start);
+            }
+            if (customDates.end) {
+                const end = new Date(customDates.end);
+                end.setHours(23, 59, 59, 999);
+                filtered = filtered.filter(p => new Date(p.created_at) <= end);
+            }
+        }
+        setFilteredPayments(filtered);
+    }
+
+    const totalRevenue = filteredPayments.reduce((sum, p) => sum + Number(p.amount), 0);
+    const totalSales = filteredPayments.length;
 
     async function fetchReviews() {
         setLoading(true);
@@ -105,6 +162,73 @@ export default function AdminPanel() {
 
                 {/* Toast */}
                 {toast && <div className="admin__toast">{toast}</div>}
+
+                {/* Sales Dashboard */}
+                <div className="admin__card admin__card--dashboard animate-fade-up">
+                    <div className="admin__card-header">
+                        <h2 className="admin__card-title">📊 Sales Dashboard</h2>
+                        <div className="admin__filters">
+                            <button className={`admin__filter-btn ${dateFilter === 'all' ? 'active' : ''}`} onClick={() => setDateFilter('all')}>All Time</button>
+                            <button className={`admin__filter-btn ${dateFilter === 'daily' ? 'active' : ''}`} onClick={() => setDateFilter('daily')}>Daily</button>
+                            <button className={`admin__filter-btn ${dateFilter === 'weekly' ? 'active' : ''}`} onClick={() => setDateFilter('weekly')}>Weekly</button>
+                            <button className={`admin__filter-btn ${dateFilter === 'monthly' ? 'active' : ''}`} onClick={() => setDateFilter('monthly')}>Monthly</button>
+                            <button className={`admin__filter-btn ${dateFilter === 'custom' ? 'active' : ''}`} onClick={() => setDateFilter('custom')}>Custom</button>
+                        </div>
+                    </div>
+
+                    {dateFilter === 'custom' && (
+                        <div className="admin__custom-dates animate-fade-in">
+                            <div className="admin__form-group">
+                                <label>Start Date</label>
+                                <input type="date" value={customDates.start} onChange={(e) => setCustomDates(d => ({ ...d, start: e.target.value }))} />
+                            </div>
+                            <div className="admin__form-group">
+                                <label>End Date</label>
+                                <input type="date" value={customDates.end} onChange={(e) => setCustomDates(d => ({ ...d, end: e.target.value }))} />
+                            </div>
+                        </div>
+                    )}
+
+                    <div className="admin__stats-grid">
+                        <div className="admin__stat-card">
+                            <p className="admin__stat-label">Total Sales</p>
+                            <p className="admin__stat-value">{totalSales}</p>
+                        </div>
+                        <div className="admin__stat-card">
+                            <p className="admin__stat-label">Total Revenue</p>
+                            <p className="admin__stat-value">₹{totalRevenue}</p>
+                        </div>
+                    </div>
+
+                    <div className="admin__table-wrap">
+                        {salesLoading ? (
+                            <div className="admin__loading"><div className="spinner" /></div>
+                        ) : filteredPayments.length === 0 ? (
+                            <p className="admin__empty">No sales found for this period.</p>
+                        ) : (
+                            <table className="admin__table">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Customer Email</th>
+                                        <th>Amount</th>
+                                        <th>Payment ID</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {filteredPayments.map(p => (
+                                        <tr key={p.id}>
+                                            <td>{new Date(p.created_at).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}</td>
+                                            <td className="admin__email-cell">{p.user_email}</td>
+                                            <td>₹{p.amount}</td>
+                                            <td className="admin__id-cell">{p.payment_id}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        )}
+                    </div>
+                </div>
 
                 {/* Price Management */}
                 <div className="admin__card admin__card--price animate-fade-up">
