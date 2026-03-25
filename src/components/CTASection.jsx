@@ -23,8 +23,12 @@ export default function CTASection() {
 
     useEffect(() => {
         const fetchPrice = async () => {
-            const { data } = await supabase.from('settings').select('value').eq('key', 'book_price').single();
-            if (data) setPrice(Number(data.value));
+            try {
+                const { data } = await supabase.from('settings').select('value').eq('key', 'book_price').maybeSingle();
+                if (data?.value) setPrice(Number(data.value));
+            } catch (e) {
+                console.warn('Failed to fetch price:', e);
+            }
         };
         fetchPrice();
     }, []);

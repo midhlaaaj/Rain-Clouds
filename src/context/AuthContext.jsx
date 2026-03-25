@@ -52,14 +52,17 @@ export function AuthProvider({ children }) {
     }
 
     useEffect(() => {
-        // Initial session check
-        supabase.auth.getSession().then(({ data: { session } }) => {
+        // Initial session check with safety timeout
+        const sessionPromise = supabase.auth.getSession();
+        const timeoutPromise = new Promise(resolve => setTimeout(resolve, 5000));
+
+        Promise.race([sessionPromise, timeoutPromise]).then((result) => {
+            const session = result?.data?.session;
             const currentUser = session?.user ?? null;
             setUser(currentUser);
-            setLoading(false); // ALWAYS unblock the app here
+            setLoading(false); 
 
             if (currentUser) {
-                // Background checks
                 checkAdmin(currentUser.id);
                 checkPurchase(currentUser.email);
             }
