@@ -5,7 +5,6 @@ import { supabase } from '../lib/supabase';
 import './HeroSection.css';
 
 const RAZORPAY_KEY = import.meta.env.VITE_RAZORPAY_KEY_ID;
-const AMOUNT = 100; // ₹1 in paise
 
 function loadRazorpayScript() {
     return new Promise((resolve) => {
@@ -22,6 +21,15 @@ export default function HeroSection() {
     const { user, hasPurchased, checkPurchase } = useAuth();
     const navigate = useNavigate();
     const rainRef = useRef(null);
+    const [price, setPrice] = useState(1);
+
+    useEffect(() => {
+        const fetchPrice = async () => {
+            const { data } = await supabase.from('settings').select('value').eq('key', 'book_price').single();
+            if (data) setPrice(Number(data.value));
+        };
+        fetchPrice();
+    }, []);
 
     // Generate raindrops on mount
     useEffect(() => {
@@ -51,7 +59,7 @@ export default function HeroSection() {
 
         const options = {
             key: RAZORPAY_KEY,
-            amount: AMOUNT,
+            amount: price * 100,
             currency: 'INR',
             name: 'Rain Clouds',
             description: 'മഴമേഘങ്ങളെ പ്രണയിച്ചവൾ — Stories of Resilience',
@@ -67,7 +75,7 @@ export default function HeroSection() {
                     user_email: user?.email || 'guest',
                     payment_id: response.razorpay_payment_id,
                     order_id: response.razorpay_order_id,
-                    amount: 1,
+                    amount: price,
                     status: 'success',
                 });
                 await checkPurchase(user?.email); // Update global purchase status
@@ -117,7 +125,7 @@ export default function HeroSection() {
                             </button>
                         ) : (
                             <button className="btn-primary" onClick={handleBuyNow}>
-                                <span>Buy Now — ₹1</span>
+                                <span>Buy Now — ₹{price}</span>
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
                                     <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                                 </svg>

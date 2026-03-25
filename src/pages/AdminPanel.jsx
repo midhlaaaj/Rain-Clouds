@@ -11,10 +11,22 @@ export default function AdminPanel() {
     const [editingId, setEditingId] = useState(null);
     const [saving, setSaving] = useState(false);
     const [toast, setToast] = useState('');
+    const [bookPrice, setBookPrice] = useState(1);
+    const [priceSaving, setPriceSaving] = useState(false);
 
     useEffect(() => {
         fetchReviews();
+        fetchPrice();
     }, []);
+
+    async function fetchPrice() {
+        const { data } = await supabase
+            .from('settings')
+            .select('value')
+            .eq('key', 'book_price')
+            .single();
+        if (data) setBookPrice(Number(data.value));
+    }
 
     async function fetchReviews() {
         setLoading(true);
@@ -68,6 +80,18 @@ export default function AdminPanel() {
         fetchReviews();
     }
 
+    async function handlePriceUpdate(e) {
+        e.preventDefault();
+        setPriceSaving(true);
+        const { error } = await supabase
+            .from('settings')
+            .upsert({ key: 'book_price', value: String(bookPrice) }, { onConflict: 'key' });
+        
+        if (error) showToast('Error updating price');
+        else showToast('Price updated successfully!');
+        setPriceSaving(false);
+    }
+
     return (
         <div className="admin">
             <div className="admin__inner container">
@@ -81,6 +105,31 @@ export default function AdminPanel() {
 
                 {/* Toast */}
                 {toast && <div className="admin__toast">{toast}</div>}
+
+                {/* Price Management */}
+                <div className="admin__card admin__card--price animate-fade-up">
+                    <h2 className="admin__card-title">💰 Manage Book Price</h2>
+                    <form className="admin__price-form" onSubmit={handlePriceUpdate}>
+                        <div className="admin__form-group">
+                            <label>Book Price (₹)</label>
+                            <div className="admin__price-input-wrap">
+                                <span className="admin__currency">₹</span>
+                                <input
+                                    type="number"
+                                    min="1"
+                                    value={bookPrice}
+                                    onChange={(e) => setBookPrice(e.target.value)}
+                                    placeholder="e.g. 150"
+                                    required
+                                />
+                            </div>
+                            <p className="admin__help-text">This will update the price across the entire website instantly.</p>
+                        </div>
+                        <button className="btn-primary" type="submit" disabled={priceSaving}>
+                            <span>{priceSaving ? 'Updating…' : 'Update Price'}</span>
+                        </button>
+                    </form>
+                </div>
 
                 {/* Form */}
                 <div className="admin__card animate-fade-up delay-1">

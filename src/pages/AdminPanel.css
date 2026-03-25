@@ -66,10 +66,45 @@
 
 .admin__card-title {
     font-family: var(--font-heading);
-    font-size: 1.15rem;
+    font-size: 1.25rem;
     font-weight: 700;
     color: var(--deep-blue);
     margin-bottom: 24px;
+}
+
+.admin__card--price {
+    margin-bottom: 40px;
+}
+
+.admin__price-form {
+    display: flex;
+    align-items: flex-end;
+    gap: 24px;
+    flex-wrap: wrap;
+}
+
+.admin__price-input-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+    max-width: 160px;
+}
+
+.admin__currency {
+    position: absolute;
+    left: 14px;
+    font-weight: 600;
+    color: var(--text-dark);
+}
+
+.admin__price-input-wrap input {
+    padding-left: 32px !important;
+}
+
+.admin__help-text {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-top: 8px;
 }
 
 /* Form */

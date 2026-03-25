@@ -4,7 +4,6 @@ import { supabase } from '../lib/supabase';
 import './CTASection.css';
 
 const RAZORPAY_KEY = import.meta.env.VITE_RAZORPAY_KEY_ID;
-const AMOUNT = 100;
 
 function loadRazorpayScript() {
     return new Promise((resolve) => {
@@ -20,6 +19,15 @@ function loadRazorpayScript() {
 export default function CTASection() {
     const { user, hasPurchased, checkPurchase } = useAuth();
     const navigate = useNavigate();
+    const [price, setPrice] = useState(1);
+
+    useEffect(() => {
+        const fetchPrice = async () => {
+            const { data } = await supabase.from('settings').select('value').eq('key', 'book_price').single();
+            if (data) setPrice(Number(data.value));
+        };
+        fetchPrice();
+    }, []);
 
     async function handleBuyNow() {
         const loaded = await loadRazorpayScript();
@@ -30,7 +38,7 @@ export default function CTASection() {
 
         const options = {
             key: RAZORPAY_KEY,
-            amount: AMOUNT,
+            amount: price * 100,
             currency: 'INR',
             name: 'Rain Clouds',
             description: 'മഴമേഘങ്ങളെ പ്രണയിച്ചവൾ — A Collection of Emotions',
@@ -41,7 +49,7 @@ export default function CTASection() {
                     user_email: user?.email || 'guest',
                     payment_id: response.razorpay_payment_id,
                     order_id: response.razorpay_order_id,
-                    amount: 1,
+                    amount: price,
                     status: 'success',
                 });
                 await checkPurchase(user?.email);
@@ -66,13 +74,13 @@ export default function CTASection() {
 
                     {!hasPurchased && (
                         <div className="cta__price-wrap">
-                            <span className="cta__price">₹1</span>
+                            <span className="cta__price">₹{price}</span>
                             <span className="cta__price-tag">One-time • Instant PDF delivery</span>
                         </div>
                     )}
 
                     <button className="btn-primary cta__btn" onClick={hasPurchased ? () => navigate('/read') : handleBuyNow}>
-                        <span>{hasPurchased ? 'Start Reading Now' : 'Get the Ebook — ₹1'}</span>
+                        <span>{hasPurchased ? 'Start Reading Now' : `Get the Ebook — ₹${price}`}</span>
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
                             <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                         </svg>

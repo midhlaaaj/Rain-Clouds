@@ -138,6 +138,40 @@
     transform: scale(1.05);
 }
 
+.header__actions {
+    justify-self: end;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.header__logout {
+    background: none;
+    padding: 8px;
+    border-radius: 50%;
+    transition: background 0.2s, transform 0.2s, color 0.2s;
+    color: var(--white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.header__logout:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: scale(1.05);
+}
+
+/* Dark text and Scrolled states for Logout */
+.header--scrolled .header__logout,
+.header--dark-text:not(.header--scrolled) .header__logout {
+    color: var(--deep-blue);
+}
+
+.header--scrolled .header__logout:hover,
+.header--dark-text:not(.header--scrolled) .header__logout:hover {
+    background: rgba(74, 144, 217, 0.1);
+}
+
 .header__profile-dot {
     position: absolute;
     top: 8px;
