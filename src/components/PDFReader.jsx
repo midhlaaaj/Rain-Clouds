@@ -103,9 +103,7 @@ export default function PDFReader({ file = '/ebook.pdf', onClose }) {
                         animate={{ opacity: 1, x: 0 }}
                         exit={{ opacity: 0, x: -20 }}
                         transition={{ duration: 0.3 }}
-                        drag="x"
-                        dragConstraints={{ left: 0, right: 0 }}
-                        onDragEnd={handleSwipe}
+                        onPanEnd={handleSwipe}
                         className="pdf-page-container"
                     >
                         <Document

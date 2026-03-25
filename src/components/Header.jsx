@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { supabase } from '../lib/supabase';
-import { LogOut } from 'lucide-react';
 import Sidebar from './Sidebar';
 import './Header.css';
 
@@ -18,10 +17,6 @@ export default function Header({ darkText = false }) {
         return () => window.removeEventListener('scroll', onScroll);
     }, []);
 
-    const handleLogout = async () => {
-        await supabase.auth.signOut();
-        navigate('/');
-    };
 
     return (
         <>
@@ -44,16 +39,6 @@ export default function Header({ darkText = false }) {
                     </Link>
 
                     <div className="header__actions">
-                        {user && (
-                            <button
-                                className="header__action-btn header__logout"
-                                onClick={handleLogout}
-                                aria-label="Sign out"
-                                title="Log out"
-                            >
-                                <LogOut size={20} />
-                            </button>
-                        )}
                         <button
                             className="header__profile"
                             onClick={() => navigate(user ? '/dashboard' : '/signin')}

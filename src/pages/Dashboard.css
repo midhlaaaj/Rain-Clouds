@@ -14,8 +14,35 @@
 .dashboard__header {
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 20px;
+    margin-bottom: 40px;
     flex-wrap: wrap;
+}
+
+.dashboard__header-right {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.dashboard__logout-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 8px;
+    background: rgba(239, 68, 68, 0.05);
+    color: #ef4444;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+}
+
+.dashboard__logout-btn:hover {
+    background: #ef4444;
+    color: white;
+    transform: translateY(-1px);
 }
 
 .dashboard__avatar {

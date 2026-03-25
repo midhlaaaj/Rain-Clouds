@@ -1,11 +1,13 @@
-import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { LogOut } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../context/AuthContext';
 import './Dashboard.css';
 
 export default function Dashboard() {
-    const { user, isAdmin } = useAuth();
+    const { user, isAdmin, signOut } = useAuth();
+    const navigate = useNavigate();
     const [payments, setPayments] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -36,11 +38,21 @@ export default function Dashboard() {
                         <h1 className="dashboard__title">My Dashboard</h1>
                         <p className="dashboard__email">{user.email}</p>
                     </div>
-                    {isAdmin && (
-                        <Link to="/admin" className="dashboard__admin-link">
-                            ⚙ Admin Panel
-                        </Link>
-                    )}
+                    <div className="dashboard__header-right">
+                        {isAdmin && (
+                            <Link to="/admin" className="dashboard__admin-link">
+                                ⚙ Admin Panel
+                            </Link>
+                        )}
+                        <button 
+                            className="dashboard__logout-btn" 
+                            onClick={async () => { await signOut(); navigate('/'); }}
+                            title="Log out"
+                        >
+                            <LogOut size={18} />
+                            <span>Log Out</span>
+                        </button>
+                    </div>
                 </div>
 
                 {/* Status card */}
