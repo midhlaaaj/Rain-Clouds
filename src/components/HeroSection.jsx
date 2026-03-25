@@ -55,40 +55,64 @@ export default function HeroSection() {
     }, []);
 
     async function handleBuyNow() {
+        if (!user) {
+            navigate('/signin');
+            return;
+        }
+
         const loaded = await loadRazorpayScript();
         if (!loaded) {
             alert('Could not load Razorpay. Please check your connection.');
             return;
         }
 
-        const options = {
-            key: RAZORPAY_KEY,
-            amount: price * 100,
-            currency: 'INR',
-            name: 'Rain Clouds',
-            description: 'മഴമേഘങ്ങളെ പ്രണയിച്ചവൾ — Stories of Resilience',
-            prefill: {
-                email: user?.email || '',
-            },
-            theme: {
-                color: '#4a90d9',
-            },
-            handler: async function (response) {
-                // Store payment record in Supabase
-                await supabase.from('payments').insert({
-                    user_email: user?.email || 'guest',
-                    payment_id: response.razorpay_payment_id,
-                    order_id: response.razorpay_order_id,
-                    amount: price,
-                    status: 'success',
-                });
-                await checkPurchase(user?.email); // Update global purchase status
-                navigate('/success');
-            },
-        };
+        try {
+            const options = {
+                key: RAZORPAY_KEY,
+                amount: price * 100,
+                currency: 'INR',
+                name: 'Rain Clouds',
+                description: 'മഴമേഘങ്ങളെ പ്രണയിച്ചവൾ — Stories of Resilience',
+                prefill: {
+                    email: user.email || '',
+                },
+                theme: {
+                    color: '#4a90d9',
+                },
+                handler: async function (response) {
+                    try {
+                        // Store payment record in Supabase
+                        await supabase.from('payments').insert({
+                            user_email: user.email,
+                            payment_id: response.razorpay_payment_id,
+                            order_id: response.razorpay_order_id,
+                            amount: price,
+                            status: 'success',
+                        });
+                        await checkPurchase(user.email); // Update global purchase status
+                        navigate('/success');
+                    } catch (err) {
+                        console.error('Error saving payment:', err);
+                        alert('Payment successful, but failed to update your status. Please contact support.');
+                    }
+                },
+                modal: {
+                    ondismiss: function() {
+                        console.log('Checkout modal closed');
+                    }
+                }
+            };
 
-        const rzp = new window.Razorpay(options);
-        rzp.open();
+            const rzp = new window.Razorpay(options);
+            rzp.on('payment.failed', function (response) {
+                console.error('Payment failed:', response.error);
+                alert('Payment failed: ' + response.error.description);
+            });
+            rzp.open();
+        } catch (err) {
+            console.error('Razorpay initialization failed:', err);
+            alert('Could not open payment window. If you are on localhost, ensure you are using a test key or HTTPS.');
+        }
     }
 
     return (
