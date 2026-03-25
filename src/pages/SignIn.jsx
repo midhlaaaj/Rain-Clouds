@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { useNavigate, Navigate } from 'react-router-dom';
+import { useNavigate, Navigate, useLocation } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../context/AuthContext';
 import { Eye, EyeOff } from 'lucide-react';
@@ -8,14 +8,25 @@ import './SignIn.css';
 export default function SignIn() {
     const { user } = useAuth();
     const navigate = useNavigate();
-    const [mode, setMode] = useState('signin'); // 'signin' | 'signup' | 'forgot'
+    const location = useLocation();
+    const [mode, setMode] = useState(location.pathname === '/signup' ? 'signup' : 'signin'); // 'signin' | 'signup'
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [rememberMe, setRememberMe] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
     const rainRef = useRef(null);
+
+    // Load remembered email
+    useEffect(() => {
+        const savedEmail = localStorage.getItem('rememberedEmail');
+        if (savedEmail) {
+            setEmail(savedEmail);
+            setRememberMe(true);
+        }
+    }, []);
 
     // Generate raindrops on mount
     useEffect(() => {
@@ -47,17 +58,30 @@ export default function SignIn() {
         if (mode === 'signin') {
             const { error } = await supabase.auth.signInWithPassword({ email, password });
             if (error) setError(error.message);
-            else navigate('/dashboard');
+            else {
+                if (rememberMe) {
+                    localStorage.setItem('rememberedEmail', email);
+                } else {
+                    localStorage.removeItem('rememberedEmail');
+                }
+                navigate('/dashboard');
+            }
         } else if (mode === 'signup') {
-            const { error } = await supabase.auth.signUp({ email, password });
-            if (error) setError(error.message);
-            else setSuccess('Check your email to confirm your account!');
-        } else {
-            const { error } = await supabase.auth.resetPasswordForEmail(email, {
-                redirectTo: `${window.location.origin}/signin`,
-            });
-            if (error) setError(error.message);
-            else setSuccess('Password reset link sent to your email!');
+            const { data, error } = await supabase.auth.signUp({ email, password });
+            if (error) {
+                if (
+                    error.message.toLowerCase().includes('already registered') || 
+                    error.message.toLowerCase().includes('already exist')
+                ) {
+                    setError('An account with this email already exists. Try to sign in instead.');
+                } else {
+                    setError(error.message);
+                }
+            } else if (data?.user?.identities && data.user.identities.length === 0) {
+                setError('An account with this email already exists. Try to sign in instead.');
+            } else {
+                setSuccess('Check your email to confirm your account!');
+            }
         }
         setLoading(false);
     }
@@ -78,14 +102,12 @@ export default function SignIn() {
                 <div className="signin-card__top">
                     <div className="signin-card__icon">☁</div>
                     <h1 className="signin-card__title">
-                        {mode === 'signin' ? 'Welcome Back' : mode === 'signup' ? 'Join Rain Clouds' : 'Reset Password'}
+                        {mode === 'signin' ? 'Welcome Back' : 'Join Rain Clouds'}
                     </h1>
                     <p className="signin-card__subtitle">
                         {mode === 'signin'
                             ? 'Sign in to access your dashboard and purchase history.'
-                            : mode === 'signup'
-                            ? 'Create an account to purchase and access your ebook.'
-                            : 'Enter your email to receive a password reset link.'}
+                            : 'Create an account to purchase and access your ebook.'}
                     </p>
                 </div>
 
@@ -102,38 +124,40 @@ export default function SignIn() {
                         />
                     </div>
 
-                    {mode !== 'forgot' && (
-                        <div className="signin-form__group">
-                            <div className="signin-form__label-row">
-                                <label className="signin-form__label">Password</label>
-                                {mode === 'signin' && (
-                                    <button 
-                                        type="button" 
-                                        className="signin-form__forgot-btn"
-                                        onClick={() => { setMode('forgot'); setError(''); setSuccess(''); }}
-                                    >
-                                        Forgot Password?
-                                    </button>
-                                )}
-                            </div>
-                            <div className="signin-form__password-wrap">
+                    <div className="signin-form__group">
+                        <div className="signin-form__label-row">
+                            <label className="signin-form__label">Password</label>
+                        </div>
+                        <div className="signin-form__password-wrap">
+                            <input
+                                type={showPassword ? 'text' : 'password'}
+                                className="signin-form__input signin-form__input--password"
+                                placeholder="••••••••"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                required
+                            />
+                            <button 
+                                type="button" 
+                                className="signin-form__toggle-password"
+                                onClick={() => setShowPassword(!showPassword)}
+                                tabIndex="-1"
+                            >
+                                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                            </button>
+                        </div>
+                    </div>
+
+                    {mode === 'signin' && (
+                        <div className="signin-form__extras">
+                            <label className="signin-form__remember">
                                 <input
-                                    type={showPassword ? 'text' : 'password'}
-                                    className="signin-form__input signin-form__input--password"
-                                    placeholder="••••••••"
-                                    value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
-                                    required={mode !== 'forgot'}
+                                    type="checkbox"
+                                    checked={rememberMe}
+                                    onChange={(e) => setRememberMe(e.target.checked)}
                                 />
-                                <button 
-                                    type="button" 
-                                    className="signin-form__toggle-password"
-                                    onClick={() => setShowPassword(!showPassword)}
-                                    tabIndex="-1"
-                                >
-                                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                                </button>
-                            </div>
+                                <span>Remember Me</span>
+                            </label>
                         </div>
                     )}
 
@@ -146,9 +170,7 @@ export default function SignIn() {
                                 ? 'Please wait…' 
                                 : mode === 'signin' 
                                 ? 'Sign In' 
-                                : mode === 'signup' 
-                                ? 'Create Account' 
-                                : 'Send Reset Link'}
+                                : 'Create Account'}
                         </span>
                     </button>
                 </form>
@@ -163,7 +185,7 @@ export default function SignIn() {
                         </>
                     ) : (
                         <>
-                            {mode === 'signup' ? 'Already have an account?' : 'Remembered your password?'}
+                            {mode === 'signup' ? 'Already have an account?' : ''}
                             {' '}
                             <button onClick={() => { setMode('signin'); setError(''); setSuccess(''); }}>
                                 Sign In

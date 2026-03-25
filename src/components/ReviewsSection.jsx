@@ -39,6 +39,7 @@ const FALLBACK_REVIEWS = [
 export default function ReviewsSection() {
     const [reviews, setReviews] = useState(FALLBACK_REVIEWS);
     const [loading, setLoading] = useState(true);
+    const [selectedReview, setSelectedReview] = useState(null);
 
     useEffect(() => {
         async function fetchReviews() {
@@ -56,9 +57,8 @@ export default function ReviewsSection() {
     }, []);
 
     // Auto-scroll logic
-    const [currentIndex, setCurrentIndex] = useState(0);
+    const scrollRef = useRef(null);
     const [isHovered, setIsHovered] = useState(false);
-    const [isTransitioning, setIsTransitioning] = useState(true);
     const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1200);
 
     useEffect(() => {
@@ -70,33 +70,32 @@ export default function ReviewsSection() {
     const itemsPerView = windowWidth <= 768 ? 1 : 3;
     const originalLength = reviews.length;
 
+    // Multiply reviews to give a continuous feeling
+    const extendedReviews = [...reviews, ...reviews, ...reviews, ...reviews];
+
     // The main auto-scroll timer
     useEffect(() => {
         if (loading || originalLength <= itemsPerView || isHovered) return;
 
         const interval = setInterval(() => {
-            setIsTransitioning(true);
-            setCurrentIndex((prev) => prev + 1);
-        }, 5000); // Scroll every 5 seconds
+            if (scrollRef.current) {
+                const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
+                
+                // If we reach near the end, smooth scroll back to the start
+                if (scrollLeft + clientWidth >= scrollWidth - 10) {
+                    scrollRef.current.scrollTo({ left: 0, behavior: 'smooth' });
+                } else {
+                    const itemElement = scrollRef.current.children[0];
+                    if (itemElement) {
+                         const itemWidth = itemElement.offsetWidth + 24; // 24px is gap
+                         scrollRef.current.scrollBy({ left: itemWidth, behavior: 'smooth' });
+                    }
+                }
+            }
+        }, 3000); // Scroll every 3 seconds
 
         return () => clearInterval(interval);
     }, [loading, originalLength, isHovered, itemsPerView]);
-
-    // The seamless wrap-around logic
-    useEffect(() => {
-        // When we reach the exact clone of the beginning
-        if (currentIndex === originalLength) {
-            const timeout = setTimeout(() => {
-                // Disable transition and snap back to the real beginning
-                setIsTransitioning(false);
-                setCurrentIndex(0);
-            }, 800); // 800ms matches the CSS transition duration
-
-            return () => clearTimeout(timeout);
-        }
-    }, [currentIndex, originalLength]);
-
-    const extendedReviews = [...reviews, ...reviews];
 
     return (
         <section className="reviews">
@@ -115,21 +114,45 @@ export default function ReviewsSection() {
                     </div>
                 ) : (
                     <div
-                        className={`reviews__carousel ${isTransitioning ? 'reviews__carousel--transitioning' : ''}`}
+                        className="reviews__carousel"
                         onMouseEnter={() => setIsHovered(true)}
                         onMouseLeave={() => setIsHovered(false)}
-                        style={{ '--current-index': currentIndex }}
                     >
-                        <div className="reviews__carousel-track">
+                        <div className="reviews__carousel-track" ref={scrollRef}>
                             {extendedReviews.map((r, index) => (
                                 <div className="reviews__carousel-item" key={`${r.id}-${index}`}>
-                                    <ReviewCard name={r.reviewer_name} text={r.review_text} />
+                                    <ReviewCard 
+                                        name={r.reviewer_name} 
+                                        text={r.review_text} 
+                                        onCardClick={() => setSelectedReview(r)}
+                                    />
                                 </div>
                             ))}
                         </div>
                     </div>
                 )}
             </div>
+
+            {/* Review Modal */}
+            {selectedReview && (
+                <div className="reviews-modal" onClick={() => setSelectedReview(null)}>
+                    <div className="reviews-modal__content" onClick={(e) => e.stopPropagation()}>
+                        <ReviewCard 
+                            name={selectedReview.reviewer_name} 
+                            text={selectedReview.review_text} 
+                            isModal={true} 
+                        />
+                        <button 
+                            className="reviews-modal__close" 
+                            onClick={() => setSelectedReview(null)}
+                        >
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                                <path d="M18 6L6 18M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            )}
         </section>
     );
 }

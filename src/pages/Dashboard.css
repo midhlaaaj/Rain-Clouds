@@ -10,6 +10,22 @@
     gap: 32px;
 }
 
+.dashboard__back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--sky-blue);
+    text-decoration: none;
+    margin-bottom: -16px;
+    transition: color 0.2s;
+}
+
+.dashboard__back-link:hover {
+    color: var(--deep-blue);
+}
+
 /* Header */
 .dashboard__header {
     display: flex;

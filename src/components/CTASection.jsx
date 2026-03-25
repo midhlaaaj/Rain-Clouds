@@ -36,7 +36,7 @@ export default function CTASection() {
 
     async function handleBuyNow() {
         if (!user) {
-            navigate('/signin');
+            navigate('/signup');
             return;
         }
 
@@ -57,14 +57,27 @@ export default function CTASection() {
                 theme: { color: '#4a90d9' },
                 handler: async function (response) {
                     try {
-                        await supabase.from('payments').insert({
+                        const { error: dbError } = await supabase.from('payments').insert({
                             user_email: user.email,
                             payment_id: response.razorpay_payment_id,
                             order_id: response.razorpay_order_id,
                             amount: price,
                             status: 'success',
                         });
+
+                        if (dbError) {
+                            console.error('Supabase Insert Error:', dbError);
+                            throw new Error(`Database Error: ${dbError.message}`);
+                        }
                         await checkPurchase(user.email);
+                        
+                        // Send receipt email (asynchronous)
+                        fetch('/api/send-receipt', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ email: user.email, amount: price })
+                        }).catch(e => console.warn('Failed to send receipt email:', e));
+
                         navigate('/success');
                     } catch (err) {
                         console.error('Error saving payment:', err);

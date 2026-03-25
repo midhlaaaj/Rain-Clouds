@@ -27,6 +27,22 @@
     margin-bottom: 4px;
 }
 
+.admin__back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--sky-blue);
+    text-decoration: none;
+    margin-bottom: 16px;
+    transition: color 0.2s;
+}
+
+.admin__back-link:hover {
+    color: var(--deep-blue);
+}
+
 .admin__title {
     font-family: var(--font-heading);
     font-size: 1.8rem;
@@ -272,6 +288,76 @@
 
 .admin__card-header .admin__card-title {
     margin-bottom: 0;
+}
+/* Sales Summary Card */
+.admin__card--sales-summary {
+    background: white;
+    margin-bottom: 30px;
+}
+
+.admin__view-all {
+    font-size: 0.9rem;
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 600;
+    padding: 8px 16px;
+    background: rgba(0, 102, 255, 0.05);
+    border-radius: 8px;
+    transition: all 0.2s;
+}
+
+.admin__view-all:hover {
+    background: rgba(0, 102, 255, 0.1);
+    transform: translateY(-1px);
+}
+
+.admin__summary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    padding: 24px 30px 30px;
+}
+
+.admin__summary-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 20px;
+    background: #f8fafc;
+    border-radius: 16px;
+    border: 1px solid #f1f5f9;
+}
+
+.admin__summary-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.admin__summary-icon--sales {
+    background: rgba(99, 102, 241, 0.1);
+    color: #6366f1;
+}
+
+.admin__summary-icon--revenue {
+    background: rgba(16, 185, 129, 0.1);
+    color: #10b981;
+}
+
+.admin__summary-label {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin: 0;
+}
+
+.admin__summary-value {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text);
+    margin: 0;
 }
 
 .admin__filters {

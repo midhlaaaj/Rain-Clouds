@@ -9,11 +9,52 @@
     position: relative;
     transition: transform 0.3s var(--transition), box-shadow 0.3s var(--transition);
     animation: fadeInUp 0.6s var(--transition) both;
+    height: 100%;
+    min-height: 380px;
+    cursor: pointer;
 }
 
 .review-card:hover {
-    transform: translateY(-6px) scale(1.015);
+    transform: translateY(-6px) scale(1.0);
     box-shadow: var(--shadow-md);
+}
+
+.review-card--modal {
+    height: auto;
+    max-height: 85vh;
+    min-height: unset;
+    max-width: 550px;
+    width: 95vw;
+    animation: scaleIn 0.3s var(--transition) both;
+    cursor: default;
+    display: flex;
+    flex-direction: column;
+}
+
+.review-card--modal .review-card__text {
+    overflow-y: auto;
+    padding-right: 12px;
+}
+
+/* Custom Scrollbar for Modal Text */
+.review-card--modal .review-card__text::-webkit-scrollbar {
+    width: 6px;
+}
+
+.review-card--modal .review-card__text::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 10px;
+}
+
+.review-card--modal .review-card__text::-webkit-scrollbar-thumb {
+    background: var(--sky-blue);
+    border-radius: 10px;
+    opacity: 0.5;
+}
+
+@keyframes scaleIn {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
 }
 
 /* Quotes */
@@ -24,23 +65,24 @@
     align-items: center;
     justify-content: center;
     user-select: none;
-}
-
-.review-card__quote svg {
-    width: 32px;
-    height: 32px;
+    font-size: 5rem;
+    font-family: Georgia, "Times New Roman", serif;
+    font-weight: 900;
+    line-height: 0.5;
 }
 
 .review-card__quote--open {
     align-self: flex-start;
-    margin-bottom: 8px;
+    margin-bottom: 24px;
     margin-left: -4px;
+    margin-top: 16px;
 }
 
 .review-card__quote--close {
     align-self: flex-end;
-    margin-top: 8px;
+    margin-top: 16px;
     margin-right: -4px;
+    margin-bottom: 8px;
 }
 
 /* Text */
@@ -50,6 +92,22 @@
     color: var(--text-muted);
     flex: 1;
     padding: 0 4px;
+    overflow: hidden;
+    position: relative;
+    /* Prevent text from breaking words awkwardly */
+    word-break: break-word;
+}
+
+.review-card__read-more {
+    color: var(--sky-blue);
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 0.85rem;
+    white-space: nowrap;
+}
+
+.review-card__read-more:hover {
+    text-decoration: underline;
 }
 
 /* Footer */

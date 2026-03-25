@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { LogOut } from 'lucide-react';
+import { LogOut, ArrowLeft } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../context/AuthContext';
 import './Dashboard.css';
@@ -29,6 +29,11 @@ export default function Dashboard() {
     return (
         <div className="dashboard">
             <div className="dashboard__inner container">
+                <Link to="/" className="dashboard__back-link animate-fade-up">
+                    <ArrowLeft size={16} />
+                    Back to Home
+                </Link>
+                
                 {/* Header */}
                 <div className="dashboard__header animate-fade-up">
                     <div className="dashboard__avatar">

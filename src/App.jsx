@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import { useAuth } from './context/AuthContext';
 import Header from './components/Header';
@@ -6,6 +7,8 @@ import Home from './pages/Home';
 import SignIn from './pages/SignIn';
 import Dashboard from './pages/Dashboard';
 import AdminPanel from './pages/AdminPanel';
+import SalesDashboard from './pages/SalesDashboard';
+import Diagnostics from './pages/Diagnostics';
 import PaymentSuccess from './pages/PaymentSuccess';
 import PDFReaderPage from './pages/PDFReaderPage';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -14,7 +17,12 @@ function App() {
   const { loading } = useAuth();
   const location = useLocation();
   const isHome = location.pathname === '/';
-  const isSignIn = location.pathname === '/signin';
+  const isSuccess = location.pathname === '/success';
+  const isAuthPage = location.pathname === '/signin' || location.pathname === '/signup';
+
+  useEffect(() => {
+    console.log('App Mounted at:', location.pathname, 'Loading:', loading);
+  }, [loading, location.pathname]);
 
   if (loading) {
     return (
@@ -26,11 +34,12 @@ function App() {
 
   return (
     <>
-      <Header darkText={!isHome && !isSignIn} />
+      <Header darkText={!isHome && !isAuthPage && !isSuccess} />
       <main>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/signin" element={<SignIn />} />
+          <Route path="/signup" element={<SignIn />} />
           <Route path="/success" element={<PaymentSuccess />} />
           <Route
             path="/read"
@@ -56,9 +65,25 @@ function App() {
               </ProtectedRoute>
             }
           />
+          <Route
+            path="/admin/sales"
+            element={
+              <ProtectedRoute adminOnly>
+                <SalesDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/diagnostics"
+            element={
+              <ProtectedRoute adminOnly>
+                <Diagnostics />
+              </ProtectedRoute>
+            }
+          />
         </Routes>
       </main>
-      {!isSignIn && <Footer />}
+      {!isAuthPage && <Footer />}
     </>
   );
 }

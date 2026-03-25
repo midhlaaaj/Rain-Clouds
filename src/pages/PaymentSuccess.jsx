@@ -1,40 +1,30 @@
 import { Link } from 'react-router-dom';
+import { ArrowRight } from 'lucide-react';
 import './PaymentSuccess.css';
 
 export default function PaymentSuccess() {
     return (
         <div className="success-page">
             <div className="success-card glass animate-fade-up">
-                <div className="success-card__icon">
-                    <svg viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle className="success-circle" cx="26" cy="26" r="25" stroke="#4caf50" strokeWidth="2" fill="none" />
-                        <path className="success-check" d="M14 27l8 8 16-18" stroke="#4caf50" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                </div>
-
                 <div className="success-card__cloud">☁</div>
 
                 <h1 className="success-card__title">Payment Successful!</h1>
-                <p className="success-card__subtitle">Thank you for purchasing മഴമേഘങ്ങളെ പ്രണയിച്ചവൾ</p>
+                <p className="success-card__subtitle">Thank you for your purchase</p>
+                
                 <p className="success-card__desc">
-                    Your ebook purchase has been confirmed. You can start reading instantly
+                    Your ebook has been confirmed. You can start reading instantly 
                     or access it later from your dashboard. Happy reading! 🌧
                 </p>
 
-                <div className="success-card__detail">
-                    <span>📘</span>
-                    <div>
-                        <p className="success-card__detail-book">മഴമേഘങ്ങളെ പ്രണയിച്ചവൾ — A Collection of Emotions</p>
-                        <p className="success-card__detail-amount">₹1 · One-time purchase</p>
-                    </div>
+                <div className="success-card__book-display">
+                    <p className="book-display__title">മഴമേഘങ്ങളെ പ്രണയിച്ചവൾ</p>
+                    <p className="book-display__tagline">A Collection of Emotions</p>
                 </div>
 
                 <div className="success-card__actions">
                     <Link to="/read" className="btn-primary">
                         <span>Start Reading Now</span>
-                    </Link>
-                    <Link to="/dashboard" className="success-card__home-link">
-                        Go to Dashboard
+                        <ArrowRight size={18} />
                     </Link>
                 </div>
             </div>

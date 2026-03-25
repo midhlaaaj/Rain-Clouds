@@ -40,11 +40,11 @@ export function AuthProvider({ children }) {
             .select('status')
             .eq('user_email', email)
             .eq('status', 'success')
-            .maybeSingle();
+            .limit(1);
 
         try {
             const { data } = await Promise.race([query, timeout]);
-            setHasPurchased(!!data);
+            setHasPurchased(data && data.length > 0);
         } catch (e) {
             console.warn('checkPurchase failed:', e.message);
             setHasPurchased(false);
